@@ -12,10 +12,10 @@ def Add(user):
     user[name] = 0
     return user
 
-# 순위 확인
+# 순위 확인 - 동점일 경우 먼저 생성된 유저의 순위가 더 높음
 def Show(user):
     i = 1
-    for key, value in sorted(user.items()):
+    for key, value in sorted(user.items(), key=lambda x: x[1], reverse=True):
         print(str(i)+'위: ' + str(key) + ' ' + str(value) +'점')
         i += 1
 
@@ -39,7 +39,7 @@ def Update(user):
     update_name = input('수정할 닉네임 입력 : ')
 
     if (update_name in user) == True:
-        new_score = int(input('새로운 점수 :'))
+        new_score = int(input('새로운 점수 : '))
         # 새로운 점수가 더 높다면
         if (new_score > user[update_name]):
             user[update_name] = new_score
