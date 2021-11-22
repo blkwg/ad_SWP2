@@ -10,6 +10,7 @@ class mukjjippa(QWidget):
         self.user_status = None
         self.com_dataList = [0, 1, 2]
         self.score = 0
+        self.current_score = 0
         self.gbb(self.now, self.score)
 
 
@@ -132,6 +133,103 @@ class mukjjippa(QWidget):
                 # print("패배...")
                 fullScore += 2 ** length
                 print("Score:", fullScore)
+
+
+    def ingame(self, ad_status, hand_signal):
+        # 이기고 들어갔을 때:
+        com = random.choice(self.com_dataList)
+        if com == 0:
+            # 주먹 이미지
+            pass
+        elif com == 1:
+            # 가위 이미지
+            pass
+        elif com == 2:
+            # 보 이미지
+            pass
+
+        if ad_status == 0:
+            if hand_signal == 0:#이기고 들어왔을 때
+                if com == 1:
+                    self.com_dataList.append(random.randrange(3))
+                    self.now += 1
+                    self.current_score = self.score + 2**self.now
+                elif com == 2:
+                    self.com.datalist.append(com)
+                    self.now += 1
+                    self.current_score = self.score  + 2**self.now
+                    ad_status = 1
+                elif com == 2:
+                    self.score += 2**self.now
+                    # 승리 신호 제공, 새로운 게임을 시작할 수 있는 신호 제공 코드 추가.
+            elif hand_signal == 1:
+                if com == 2:
+                    self.com_dataList.append(random.randrange(3))
+                    self.now += 1
+                    self.current_score = self.score + 2**self.now
+                elif com == 0:
+                    self.com.datalist.append(com)
+                    self.now += 1
+                    self.current_score = self.score  + 2**self.now
+                    ad_status = 1
+                elif com == 1:
+                    self.score += 2**self.now
+                    # 승리 신호 제공, 새로운 게임을 시작할 수 있는 신호 제공 코드 추가.
+            elif hand_signal == 2:
+                if com == 0:
+                    self.com_dataList.append(random.randrange(3))
+                    self.now += 1
+                    self.current_score = self.score + 2**self.now
+                elif com == 1:
+                    self.com.datalist.append(com)
+                    self.now += 1
+                    self.current_score = self.score  + 2**self.now
+                    ad_status = 1
+                elif com == 2:
+                    self.score += 2**self.now
+                    # 승리 신호 제공, 새로운 게임을 시작할 수 있는 신호 제공 코드 추가.
+
+
+        elif ad_status == 1:
+            if hand_signal == 0:  # 이기고 들어왔을 때
+                if com == 1:
+                    self.com_dataList.append(random.randrange(3))
+                    self.now += 1
+                    self.current_score = self.score + 2 ** self.now
+                elif com == 2:
+                    self.com.datalist.append(com)
+                    self.now += 1
+                    self.current_score = self.score + 2 ** self.now
+                    ad_status = 1
+                elif com == 2:
+                    self.score += 2 ** self.now
+                    # 패배 신호 제공, 새로운 게임을 시작할 수 있는 신호 제공 코드 추가.
+            elif hand_signal == 1:
+                if com == 2:
+                    self.com_dataList.append(random.randrange(3))
+                    self.now += 1
+                    self.current_score = self.score + 2 ** self.now
+                elif com == 0:
+                    self.com.datalist.append(com)
+                    self.now += 1
+                    self.current_score = self.score + 2 ** self.now
+                    ad_status = 1
+                elif com == 1:
+                    self.score += 2 ** self.now
+                    # 패배 신호 제공, 새로운 게임을 시작할 수 있는 신호 제공 코드 추가.
+            elif hand_signal == 2:
+                if com == 0:
+                    self.com_dataList.append(random.randrange(3))
+                    self.now += 1
+                    self.current_score = self.score + 2 ** self.now
+                elif com == 1:
+                    self.com.datalist.append(com)
+                    self.now += 1
+                    self.current_score = self.score + 2 ** self.now
+                    ad_status = 1
+                elif com == 2:
+                    self.score += 2 ** self.now
+                    # 패배 신호 제공, 스코어보드를 띄우는 코드, 새로운 게임을 연결할 수 있는 코드 추가.
 
 
 if __name__ == "__main__":
