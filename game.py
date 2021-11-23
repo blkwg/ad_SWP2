@@ -118,7 +118,6 @@ def mjp(stat, length, dataList, fullScore):
 
 
 
-
 torch = "Y"
 
 

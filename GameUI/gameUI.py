@@ -173,7 +173,7 @@ class Game(QWidget):
         return self.button
 
     # buttonClicke funtions
-    
+
     # 나가기 button 클릭했을 때
     def exitButtonClicked(self):
 
