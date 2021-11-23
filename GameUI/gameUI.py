@@ -77,7 +77,6 @@ class Game(QWidget):
         # self.setPalette(palette)
 
 
-
         # row1
 
         # 공격/수비 표시
@@ -173,7 +172,8 @@ class Game(QWidget):
 
         return self.button
 
-
+    # buttonClicke funtions
+    
     # 나가기 button 클릭했을 때
     def exitButtonClicked(self):
 
