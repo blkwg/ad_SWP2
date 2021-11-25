@@ -42,8 +42,8 @@ class ScoreDB(QWidget):
         findButton = QPushButton('Find')
         findButton.clicked.connect(self.findClicked)
 
-        UpdateButton = QPushButton('Update')  # 게임 종료 후 자동으로 바뀌도록 연계
-        UpdateButton.clicked.connect(self.UpdateClicked)
+        updateButton = QPushButton('Update')  # 게임 종료 후 자동으로 바뀌도록 연계
+        updateButton.clicked.connect(self.updateClicked)
 
         showButton = QPushButton('Show')
         showButton.clicked.connect(self.showClicked)
@@ -54,7 +54,7 @@ class ScoreDB(QWidget):
         commandHbox.addWidget(addButton)
         commandHbox.addWidget(delButton)
         commandHbox.addWidget(findButton)
-        commandHbox.addWidget(UpdateButton)
+        commandHbox.addWidget(updateButton)
         commandHbox.addWidget(showButton)
 
         resultLabel = QLabel('Ranking : ', self)
@@ -77,83 +77,134 @@ class ScoreDB(QWidget):
         return
 
     def addClicked(self):
-        sender = self.sender()
-        name = self.NameEdit.text()
-        msg = ''
-        check = self.nameCheck(name)
+        try:
+            sender = self.sender()
+            name = self.NameEdit.text()
+            if name == '':
+                raise ValueError
 
-        if check == False:
-            record = {'Name': name, 'Score': 0}  # 등록 -> 0점
-            self.scoredb += [record]
-            self.showScoreDB()
-        else :
-            msg = '이미 존재하는 닉네임입니다. '
+            msg = ''
+            check = self.nameCheck(name)
+
+            if check == False:
+                record = {'Name': name, 'Score': 0}  # 등록 -> 0점
+                self.scoredb += [record]
+                self.showScoreDB()
+            else :
+                msg = '이미 존재하는 닉네임입니다. '
+                self.resultEdit.setText(msg)
+
+        except ValueError:
+            msg = '입력값을 정확학게 입력해주세요 '
             self.resultEdit.setText(msg)
+            pass
+
+        except:
+            pass
+
 
     def delClicked(self):
-        sender = self.sender()
-        name = self.NameEdit.text()
-        msg = ''
-        check = self.nameCheck(name)
+        try:
+            sender = self.sender()
+            name = self.NameEdit.text()
+            if name == '':
+                raise ValueError
 
-        if check == True:
-            self.scoredb[:] = [p for p in self.scoredb if p['Name'] != name]
-            self.showScoreDB()
-        else:
-            msg = '닉네임이 존재하지 않습니다. '
+            msg = ''
+            check = self.nameCheck(name)
+
+            if check == True:
+                self.scoredb[:] = [p for p in self.scoredb if p['Name'] != name]
+                self.showScoreDB()
+            else:
+                msg = '닉네임이 존재하지 않습니다. '
+                self.resultEdit.setText(msg)
+
+        except ValueError:
+            msg = '입력값을 정확학게 입력해주세요 '
             self.resultEdit.setText(msg)
+            pass
+
+        except:
+            pass
 
 
     def findClicked(self):
-        sender = self.sender()
-        name = self.NameEdit.text()
-        msg = ''
-        idx = 1
-        check = self.nameCheck(name)
+        try:
+            sender = self.sender()
+            name = self.NameEdit.text()
+            if name == '':
+                raise ValueError
 
-        if check == True:
-            for p in sorted(self.scoredb, key=lambda person: person['Score'], reverse=True):
-                if p['Name'] != name:
-                    idx += 1
-                else:
-                    msg += str(idx) + '위' + '       \t'
-                    for attr in sorted(p):
-                        if attr != 'Age':
-                            msg += str(p[attr]) + '       \t'
-        else :
-            msg = '닉네임이 존재하지 않습니다. '
+            msg = ''
+            idx = 1
+            check = self.nameCheck(name)
 
-        self.resultEdit.setText(msg)
+            if check == True:
+                for p in sorted(self.scoredb, key=lambda person: person['Score'], reverse=True):
+                    if p['Name'] != name:
+                        idx += 1
+                    else:
+                        msg += str(idx) + '위' + '       \t'
+                        for attr in sorted(p):
+                            if attr != 'Age':
+                                msg += str(p[attr]) + '       \t'
+            else :
+                msg = '닉네임이 존재하지 않습니다. '
 
-
-    def UpdateClicked(self):   # 게임 연결 후 삭제 예정
-        sender = self.sender()
-        name = self.NameEdit.text()
-        score = int(self.ScoreEdit.text())
-        msg = ''
-        check = self.nameCheck(name)
-
-        if check == True:
-            for p in self.scoredb:
-                if p['Name'] == name:
-                    p['Score'] += score
-                    self.showScoreDB()
-        else:
-            msg = '닉네임이 존재하지 않습니다. '
             self.resultEdit.setText(msg)
 
-    def nameCheck(self, name):
-        sender = self.sender()
-        result = bool
+        except ValueError:
+            msg = '입력값을 정확학게 입력해주세요 '
+            self.resultEdit.setText(msg)
+            pass
 
-        for p in self.scoredb:
-            if p['Name'] != name:
-                result = False     # 없는 경우
+        except:
+            pass
+
+    def updateClicked(self):   # 게임 연결 후 삭제 예정
+        try:
+            sender = self.sender()
+            name = self.NameEdit.text()
+            score = int(self.ScoreEdit.text())
+            if name == '' or score == '':
+                raise ValueError
+
+            msg = ''
+            check = self.nameCheck(name)
+
+            if check == True:
+                for p in self.scoredb:
+                    if p['Name'] == name:
+                        p['Score'] += score
+                        self.showScoreDB()
             else:
-                result = True      # 있는 경우
-                break
+                msg = '닉네임이 존재하지 않습니다. '
+                self.resultEdit.setText(msg)
 
-        return result
+        except ValueError:
+            msg = '입력값을 정확학게 입력해주세요 '
+            self.resultEdit.setText(msg)
+
+        except:
+            pass
+
+
+    def nameCheck(self, name):
+        try:
+            sender = self.sender()
+            result = bool
+
+            for p in self.scoredb:
+                if p['Name'] != name:
+                    result = False     # 없는 경우
+                else:
+                    result = True      # 있는 경우
+                    break
+
+            return result
+        except:
+            pass
 
     def showClicked(self):
         sender = self.sender()
