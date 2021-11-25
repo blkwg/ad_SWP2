@@ -42,7 +42,7 @@ class ScoreDB(QWidget):
         findButton = QPushButton('Find')
         findButton.clicked.connect(self.findClicked)
 
-        UpdateButton = QPushButton('Update')
+        UpdateButton = QPushButton('Update')  # 게임 종료 후 자동으로 바뀌도록 연계
         UpdateButton.clicked.connect(self.UpdateClicked)
 
         showButton = QPushButton('Show')
@@ -73,23 +73,16 @@ class ScoreDB(QWidget):
         self.show()
 
     def gameClicked(self):
-        # 게엠 뷰 연결
+        # 게엠뷰 연결
         return
 
     def addClicked(self):
         sender = self.sender()
         name = self.NameEdit.text()
         msg = ''
-        result = bool
+        check = self.nameCheck(name)
 
-        for p in self.scoredb:
-            if p['Name'] != name:
-                result = True
-            else:
-                result = False
-                break
-
-        if result == True:
+        if check == False:
             record = {'Name': name, 'Score': 0}  # 등록 -> 0점
             self.scoredb += [record]
             self.showScoreDB()
@@ -101,17 +94,10 @@ class ScoreDB(QWidget):
         sender = self.sender()
         name = self.NameEdit.text()
         msg = ''
-        result = bool
+        check = self.nameCheck(name)
 
-        for p in self.scoredb:
-            if p['Name'] != name:
-                result = False
-            else:
-                result = True
-                break
-
-        if result == True:
-            self.scoredb.remove(p)
+        if check == True:
+            self.scoredb[:] = [p for p in self.scoredb if p['Name'] != name]
             self.showScoreDB()
         else:
             msg = '닉네임이 존재하지 않습니다. '
@@ -123,15 +109,9 @@ class ScoreDB(QWidget):
         name = self.NameEdit.text()
         msg = ''
         idx = 1
+        check = self.nameCheck(name)
 
-        for p in self.scoredb:
-            if p['Name'] != name:
-                result = False
-            else:
-                result = True
-                break
-
-        if result == True:
+        if check == True:
             for p in sorted(self.scoredb, key=lambda person: person['Score'], reverse=True):
                 if p['Name'] != name:
                     idx += 1
@@ -140,25 +120,20 @@ class ScoreDB(QWidget):
                     for attr in sorted(p):
                         if attr != 'Age':
                             msg += str(p[attr]) + '       \t'
-        else:
+        else :
             msg = '닉네임이 존재하지 않습니다. '
 
         self.resultEdit.setText(msg)
 
 
-    def UpdateClicked(self):   # 게임 종료 후 자동으로 바뀌도록 연계
+    def UpdateClicked(self):   # 게임 연결 후 삭제 예정
         sender = self.sender()
         name = self.NameEdit.text()
         score = int(self.ScoreEdit.text())
         msg = ''
+        check = self.nameCheck(name)
 
-        for p in self.scoredb:
-            if p['Name'] != name:
-                result = False
-            else:
-                result = True
-                break
-        if result == True:
+        if check == True:
             for p in self.scoredb:
                 if p['Name'] == name:
                     p['Score'] += score
@@ -167,6 +142,18 @@ class ScoreDB(QWidget):
             msg = '닉네임이 존재하지 않습니다. '
             self.resultEdit.setText(msg)
 
+    def nameCheck(self, name):
+        sender = self.sender()
+        result = bool
+
+        for p in self.scoredb:
+            if p['Name'] != name:
+                result = False     # 없는 경우
+            else:
+                result = True      # 있는 경우
+                break
+
+        return result
 
     def showClicked(self):
         sender = self.sender()
@@ -194,7 +181,7 @@ class ScoreDB(QWidget):
         pickle.dump(self.scoredb, fH)
         fH.close()
 
-    def showScoreDB(self):   # 동점이라면 먼저 등록한 유저가 앞 순위
+    def showScoreDB(self):
         msg = ''
         idx = 1
 
