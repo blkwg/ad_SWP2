@@ -95,7 +95,7 @@ class ScoreDB(QWidget):
                 self.resultEdit.setText(msg)
 
         except ValueError:
-            msg = '입력값을 정확학게 입력해주세요 '
+            msg = '입력값을 정확하게 입력해주세요 '
             self.resultEdit.setText(msg)
             pass
 
@@ -121,7 +121,7 @@ class ScoreDB(QWidget):
                 self.resultEdit.setText(msg)
 
         except ValueError:
-            msg = '입력값을 정확학게 입력해주세요 '
+            msg = '입력값을 정확하게 입력해주세요 '
             self.resultEdit.setText(msg)
             pass
 
@@ -155,7 +155,7 @@ class ScoreDB(QWidget):
             self.resultEdit.setText(msg)
 
         except ValueError:
-            msg = '입력값을 정확학게 입력해주세요 '
+            msg = '입력값을 정확하게 입력해주세요 '
             self.resultEdit.setText(msg)
             pass
 
@@ -183,7 +183,7 @@ class ScoreDB(QWidget):
                 self.resultEdit.setText(msg)
 
         except ValueError:
-            msg = '입력값을 정확학게 입력해주세요 '
+            msg = '입력값을 정확하게 입력해주세요 '
             self.resultEdit.setText(msg)
 
         except:
