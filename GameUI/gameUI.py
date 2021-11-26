@@ -1,7 +1,7 @@
 from PyQt5.QtCore import Qt, QSize
 from PyQt5.QtWidgets import QApplication, QWidget, QPushButton, QLabel, QGroupBox, QLineEdit
 from PyQt5.QtWidgets import QSizePolicy
-from PyQt5.QtWidgets import QGridLayout, QVBoxLayout
+from PyQt5.QtWidgets import QGridLayout, QVBoxLayout, QHBoxLayout
 from PyQt5.QtGui import QPixmap, QIcon, QPalette, QImage, QBrush
 
 class QPushButton(QPushButton):
@@ -94,19 +94,20 @@ class Game(QWidget):
         super().__init__(parent)
 
         self.setWindowTitle('묵찌빠 게임')
-        self.setGeometry(500, 150, 800, 800)
+        self.setGeometry(500, 150, 800, 750)
 
         # layout setting
         self.mainLayout = QGridLayout()
         self.row1Layout = QGridLayout()
         self.row2Layout = QGridLayout()
-        self.row3Layout = QGridLayout()
+        self.row3Layout = QHBoxLayout()
+        self.row3Layout.setAlignment(Qt.AlignCenter)
         self.setLayout(self.mainLayout)
 
         # images
-        mukImage = "image/묵.png"
-        jjiImage = "image/찌.png"
-        ppaImage = "image/빠.png"
+        mukImage = "image/mjp/묵.png"
+        jjiImage = "image/mjp/찌.png"
+        ppaImage = "image/mjp/빠.png"
         offenceImage = "image/공격.png"
         defenceImage = "image/방어.png"
         newGameImage = "image/재시작.png"
@@ -124,23 +125,23 @@ class Game(QWidget):
         # row1
 
         # 공격/수비 표시
-        self.OffOrDef = self.showImageGroupBox("", offenceImage, 90, 90)
+        self.OffOrDef = self.showImageGroupBox("", defenceImage, 90, 90)
 
         # 현재 상태 표시
         self.display = QLineEdit(self)
         self.display.setAlignment(Qt.AlignCenter)
         self.display.setReadOnly(True)
-        self.display.setMaximumHeight(100)
+        self.display.setMaximumHeight(80)
 
         font = self.display.font()
         font.setPointSize(font.pointSize() + 2)
         self.display.setFont(font)
 
         # 새로운 게임
-        self.newGame = QPushButton("", newGameImage, 80, 80, self.newGameButtonClicked)
+        self.newGame = QPushButton("", newGameImage, 70, 70, self.newGameButtonClicked)
 
         # 나가기 버튼
-        self.exit = QPushButton("", exitImage, 80, 80, self.exitButtonClicked)
+        self.exit = QPushButton("", exitImage, 70, 70, self.exitButtonClicked)
 
         # Layout
         self.row1Layout.addWidget(self.OffOrDef, 0, 0)
@@ -189,12 +190,21 @@ class Game(QWidget):
         self.jji = QPushButton("", jjiImage, 150, 150, self.jjiButtonClicked)
         self.ppa = QPushButton("", ppaImage, 150, 150, self.ppaButtonClicked)
 
-        # Layout
-        self.row3Layout.addWidget(self.muk, 0, 0)
-        self.row3Layout.addWidget(self.jji, 0, 1)
-        self.row3Layout.addWidget(self.ppa, 0, 2)
+        self.shapeGroupBox = QGroupBox("", 170, 550)
 
-        self.mainLayout.addLayout(self.row3Layout, 2, 0)
+        self.hbox = QHBoxLayout()
+        self.hbox.addWidget(self.muk)
+        self.hbox.addStretch(2)
+        self.hbox.addWidget(self.jji)
+        self.hbox.addStretch(2)
+        self.hbox.addWidget(self.ppa)
+
+        self.shapeGroupBox.setLayout(self.hbox)
+
+        # Layout
+        self.row3Layout.addWidget(self.shapeGroupBox)
+        self.mainLayout.addLayout(self.row3Layout,2,0)
+
 
     # image를 보여주는 groupbox
     def showImageGroupBox(self, title, image, height, width):
