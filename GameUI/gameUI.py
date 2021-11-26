@@ -4,6 +4,34 @@ from PyQt5.QtWidgets import QSizePolicy
 from PyQt5.QtWidgets import QGridLayout, QVBoxLayout, QHBoxLayout
 from PyQt5.QtGui import QPixmap, QIcon, QPalette, QImage, QBrush
 
+
+class variables():
+    def __init__(self):
+        self.status = None
+        self.Hscore = 0
+        self.score = 0
+        self.length = 0
+        self.com_dataList = [0, 1, 2]
+        self.values = [None, 0, 0, 0, [0, 1, 2], None]
+        #stat, Hscore, score, length, com_dataList, com
+
+    def changeVar(self, valueList):
+        self.status = valueList[0]
+        self.Hscore = valueList[1]
+        self.score = valueList[2]
+        self.length = valueList[3]
+        self.com_dataList = valueList[4]
+
+        if self.Hscore < self.score:
+            self.Hscore = self.score
+
+
+def ErrorLog(error: str):
+    current_time = time.strftime("%Y.%m.%d/%H:%M:%S", time.localtime(time.time()))
+    with open("Log.txt", "a") as f:
+        f.write(f"[{current_time}] - {error}\n")
+
+
 class QPushButton(QPushButton):
     def __init__(self, text, image, height, width, callback):
         super().__init__()
@@ -129,7 +157,7 @@ class Game(QWidget):
         # row1
 
         # 공격/수비 표시
-        self.OffOrDef = self.showImageGroupBox("", offenceImage, 90, 90)
+        self.OffOrDef = self.showImageGroupBox("", initialImage, 90, 90)
 
         # 현재 상태 표시
         self.display = QLineEdit(self)
@@ -159,10 +187,10 @@ class Game(QWidget):
         # row 2
 
         # 컴퓨터가 이전 턴에 낸 모양
-        self.comLastShape = self.showImageGroupBox("computer", mukImage, 160, 160)
+        self.comLastShape = self.showImageGroupBox("computer", initialImage, 160, 160)
 
         # 플레이어가 이전 턴에 낸 모양
-        self.playerLastShape = self.showImageGroupBox("player", jjiImage, 160, 160)
+        self.playerLastShape = self.showImageGroupBox("player", initialImage, 160, 160)
 
         self.lastShapeLayout = QGridLayout()
         self.lastShapeLayout.addWidget(self.comLastShape, 0, 0)
@@ -221,8 +249,6 @@ class Game(QWidget):
         return self.showGroupBox
 
 
-
-
     # buttonClicked funtions
 
     # exit button clicked
@@ -236,26 +262,19 @@ class Game(QWidget):
     def newGameButtonClicked(self):
         pass
 
-    # muk button clicked
+    # 묵 button 클릭
     def mukButtonClicked(self):
-        shape = 0
+        pass
 
-        button = self.sender()
-        # key = button.text()
 
-    # jji button clicked
+    # 찌 button 클릭
     def jjiButtonClicked(self):
-        shape = 1
+        pass
 
-        button = self.sender()
-        # key = button.text()
-
-    # ppa button clicked
+    # 빠 button 클릭
     def ppaButtonClicked(self):
-        shape = 2
+        pass
 
-        button = self.sender()
-        # key = button.text()
 
 
 
