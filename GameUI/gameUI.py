@@ -5,15 +5,20 @@ from PyQt5.QtWidgets import QGridLayout, QVBoxLayout
 from PyQt5.QtGui import QPixmap, QIcon, QPalette, QImage, QBrush
 
 class QPushButton(QPushButton):
-    def __init__(self, text, height, width, callback):
+    def __init__(self, text, image, height, width, callback):
         super().__init__()
         self.setText(text)
-        self.clicked.connect(callback)
 
-        # QPushButton 크기설정
+        # QPushButton image setting
+        self.setIcon(QIcon(image))
+        self.setIconSize(QSize(height - 15, width - 15))
+
+        # QPushButton size setting
         self.setMaximumHeight(height)
         self.setMaximumWidth(width)
         self.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Preferred)
+
+        self.clicked.connect(callback)
 
 class QLabelBox(QGroupBox): # Label들로만 이루어진 GroupBox
     def __init__(self, textList, height, width):
@@ -21,9 +26,35 @@ class QLabelBox(QGroupBox): # Label들로만 이루어진 GroupBox
 
         # GroupBox에 Label들 추가
         self.vbox = QVBoxLayout()
-        for text in textList:
-            self.show = QLabel(text)
+        for num in range(len(textList)):
+            self.show = QLabel(textList[num])
             self.vbox.addWidget(self.show)
+
+        self.setLayout(self.vbox)
+
+        # LabelBox 크기설정
+        self.setMaximumHeight(height)
+        self.setMaximumWidth(width)
+        self.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Preferred)
+
+class QInformationGroupBox(QGroupBox): # information 표시하는 GroupBox는 아예 class로 만듦
+    def __init__(self, textList, height, width):
+        super().__init__()
+
+        # GroupBox에 Label들 추가
+        self.vbox = QVBoxLayout()
+        for num in range(len(textList)):
+            self.show = QLabel(textList[num])
+            self.vbox.addWidget(self.show)
+
+            if num == 0:
+                font = self.show.font()
+                font.setPointSize(font.pointSize() + 2)
+                self.show.setFont(font)
+            else:
+                font = self.show.font()
+                font.setPointSize(font.pointSize() + 6)
+                self.show.setFont(font)
 
         self.setLayout(self.vbox)
 
@@ -62,14 +93,27 @@ class Game(QWidget):
     def __init__(self, parent=None):
         super().__init__(parent)
 
-        # layout 설정
+        self.setWindowTitle('묵찌빠 게임')
+        self.setGeometry(500, 150, 800, 800)
+
+        # layout setting
         self.mainLayout = QGridLayout()
         self.row1Layout = QGridLayout()
         self.row2Layout = QGridLayout()
         self.row3Layout = QGridLayout()
         self.setLayout(self.mainLayout)
 
-        # 배경화면 설정
+        # images
+        mukImage = "image/묵.png"
+        jjiImage = "image/찌.png"
+        ppaImage = "image/빠.png"
+        offenceImage = "image/공격.png"
+        defenceImage = "image/방어.png"
+        newGameImage = "image/재시작.png"
+        exitImage = "image/종료.png"
+        # wallpaperImage = "image/wallpaper.jpg"
+
+        # wallpaper setting
         # wallpaper = QImage("wallpaper.jpg")
         # wallpaper.scaled(QSize())
         # palette = QPalette()
@@ -80,21 +124,29 @@ class Game(QWidget):
         # row1
 
         # 공격/수비 표시
-        self.OffOrDef = QLabelBox(['공격'], 60, 90)
+        self.OffOrDef = self.showImageGroupBox("", offenceImage, 90, 90)
 
         # 현재 상태 표시
-        self.display = QLineEdit(self) # 현재 상태 표시
+        self.display = QLineEdit(self)
         self.display.setAlignment(Qt.AlignCenter)
         self.display.setReadOnly(True)
         self.display.setMaximumHeight(100)
 
+        font = self.display.font()
+        font.setPointSize(font.pointSize() + 2)
+        self.display.setFont(font)
+
+        # 새로운 게임
+        self.newGame = QPushButton("", newGameImage, 80, 80, self.newGameButtonClicked)
+
         # 나가기 버튼
-        self.exit = QPushButton("나가기", 50, 70, self.exitButtonClicked)
+        self.exit = QPushButton("", exitImage, 80, 80, self.exitButtonClicked)
 
         # Layout
         self.row1Layout.addWidget(self.OffOrDef, 0, 0)
         self.row1Layout.addWidget(self.display, 0, 1)
-        self.row1Layout.addWidget(self.exit, 0, 2)
+        self.row1Layout.addWidget(self.newGame, 0, 2)
+        self.row1Layout.addWidget(self.exit, 0, 3)
 
         self.mainLayout.addLayout(self.row1Layout, 0, 0)
 
@@ -102,19 +154,25 @@ class Game(QWidget):
         # row 2
 
         # 컴퓨터가 이전 턴에 낸 모양
-        self.comLastShape = self.shapeShowGroupBox("computer", "묵.png", 160, 160)
+        self.comLastShape = self.showImageGroupBox("computer", mukImage, 160, 160)
+
         # 플레이어가 이전 턴에 낸 모양
-        self.playerLastShape = self.shapeShowGroupBox("player", "찌.png", 160, 160)
+        self.playerLastShape = self.showImageGroupBox("player", jjiImage, 160, 160)
 
         self.lastShapeLayout = QGridLayout()
         self.lastShapeLayout.addWidget(self.comLastShape, 0, 0)
         self.lastShapeLayout.addWidget(self.playerLastShape, 2, 0)
 
         # 컴퓨터가 현재 턴에 낸 모양
-        self.comShape = self.shapeShowGroupBox("", "빠.png", 300, 300)
+        self.comShape = self.showImageGroupBox("", ppaImage, 300, 300)
 
         # high score / score / game streak 표시
-        self.informationLayout = self.informationGroupBoxs()
+        self.informationLayout = QGridLayout()
+
+        groupboxList = [["High Score", '0'], ["Score", '0'], ["Game Streak", '0']]
+        for content in groupboxList:
+            self.groupbox = QInformationGroupBox(content, 130, 150)
+            self.informationLayout.addWidget(self.groupbox, groupboxList.index(content), 0)
 
         # Layout
         self.row2Layout.addLayout(self.lastShapeLayout, 0, 0, 3, 1)
@@ -126,10 +184,10 @@ class Game(QWidget):
 
         # row 3
 
-        # 묵찌빠 select 버튼
-        self.muk = self.shapeSelectButton("묵.png", 150, 150, self.mukButtonClicked)
-        self.jji = self.shapeSelectButton("찌.png", 150, 150, self.jjiButtonClicked)
-        self.ppa = self.shapeSelectButton("빠.png", 150, 150, self.ppaButtonClicked)
+        # 묵찌빠 선택 버튼
+        self.muk = QPushButton("", mukImage, 150, 150, self.mukButtonClicked)
+        self.jji = QPushButton("", jjiImage, 150, 150, self.jjiButtonClicked)
+        self.ppa = QPushButton("", ppaImage, 150, 150, self.ppaButtonClicked)
 
         # Layout
         self.row3Layout.addWidget(self.muk, 0, 0)
@@ -138,13 +196,8 @@ class Game(QWidget):
 
         self.mainLayout.addLayout(self.row3Layout, 2, 0)
 
-
-        self.setWindowTitle('묵찌빠 게임')
-        self.setGeometry(500, 150, 800, 800)
-
-
-    # 묵찌빠 모양을 표시하는 groupbox
-    def shapeShowGroupBox(self, title, image, height, width):
+    # image를 보여주는 groupbox
+    def showImageGroupBox(self, title, image, height, width):
         self.showGroupBox = QGroupBox(title, height, width)
         self.vbox = QVBoxLayout()
         self.pixmapLabel = QPixmapLabel(image, height - 20, width - 20)
@@ -153,49 +206,37 @@ class Game(QWidget):
 
         return self.showGroupBox
 
-    # 정보들을 표시하는 'groupbox의 집합' layout
-    def informationGroupBoxs(self):
-        self.groupBoxLayout = QGridLayout()
 
-        groupboxList = [["High Score", '0'], ["Score", '0'], ["Game Streak", '0']]
-        for content in groupboxList:
-            self.groupbox = QLabelBox(content, 130, 150)
-            self.groupBoxLayout.addWidget(self.groupbox, groupboxList.index(content), 0)
 
-        return self.groupBoxLayout
 
-    # 묵찌빠 선택 button
-    def shapeSelectButton(self, image, height, width, buttonClicked):
-        self.button = QPushButton("", height, width, buttonClicked)
-        self.button.setIcon(QIcon(image))
-        self.button.setIconSize(QSize(130, 130))
+    # buttonClicked funtions
 
-        return self.button
-
-    # buttonClicke funtions
-
-    # 나가기 button 클릭했을 때
+    # exit button clicked
     def exitButtonClicked(self):
-
         button = self.sender()
         key = button.text()
         self.display.setText(key)
 
-    # 묵 button 클릭
+
+    # newGame button clicked
+    def newGameButtonClicked(self):
+        pass
+
+    # muk button clicked
     def mukButtonClicked(self):
         shape = 0
 
         button = self.sender()
         # key = button.text()
 
-    # 찌 button 클릭
+    # jji button clicked
     def jjiButtonClicked(self):
         shape = 1
 
         button = self.sender()
         # key = button.text()
 
-    # 빠 button 클릭
+    # ppa button clicked
     def ppaButtonClicked(self):
         shape = 2
 
