@@ -5,33 +5,6 @@ from PyQt5.QtWidgets import QGridLayout, QVBoxLayout, QHBoxLayout
 from PyQt5.QtGui import QPixmap, QIcon, QPalette, QImage, QBrush
 
 
-class variables():
-    def __init__(self):
-        self.status = None
-        self.Hscore = 0
-        self.score = 0
-        self.length = 0
-        self.com_dataList = [0, 1, 2]
-        self.values = [None, 0, 0, 0, [0, 1, 2], None]
-        #stat, Hscore, score, length, com_dataList, com
-
-    def changeVar(self, valueList):
-        self.status = valueList[0]
-        self.Hscore = valueList[1]
-        self.score = valueList[2]
-        self.length = valueList[3]
-        self.com_dataList = valueList[4]
-
-        if self.Hscore < self.score:
-            self.Hscore = self.score
-
-
-def ErrorLog(error: str):
-    current_time = time.strftime("%Y.%m.%d/%H:%M:%S", time.localtime(time.time()))
-    with open("Log.txt", "a") as f:
-        f.write(f"[{current_time}] - {error}\n")
-
-
 class QPushButton(QPushButton):
     def __init__(self, text, image, height, width, callback):
         super().__init__()
