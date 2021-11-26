@@ -108,10 +108,14 @@ class Game(QWidget):
         mukImage = "image/mjp/묵.png"
         jjiImage = "image/mjp/찌.png"
         ppaImage = "image/mjp/빠.png"
-        offenceImage = "image/공격.png"
-        defenceImage = "image/방어.png"
+
+        offenceImage = "image/OfforDef/공격.png"
+        defenceImage = "image/OfforDef/방어.png"
+
         newGameImage = "image/재시작.png"
         exitImage = "image/종료.png"
+        initialImage = "image/투명.png" # 처음 시작할 때 나오는 투명 배경
+        questionImage = "image/물음표.png"
         # wallpaperImage = "image/wallpaper.jpg"
 
         # wallpaper setting
@@ -125,7 +129,7 @@ class Game(QWidget):
         # row1
 
         # 공격/수비 표시
-        self.OffOrDef = self.showImageGroupBox("", defenceImage, 90, 90)
+        self.OffOrDef = self.showImageGroupBox("", offenceImage, 90, 90)
 
         # 현재 상태 표시
         self.display = QLineEdit(self)
@@ -164,8 +168,8 @@ class Game(QWidget):
         self.lastShapeLayout.addWidget(self.comLastShape, 0, 0)
         self.lastShapeLayout.addWidget(self.playerLastShape, 2, 0)
 
-        # 컴퓨터가 현재 턴에 낸 모양
-        self.comShape = self.showImageGroupBox("", ppaImage, 300, 300)
+        # 컴퓨터의 현재 턴
+        self.comShape = self.showImageGroupBox("", questionImage, 300, 300)
 
         # high score / score / game streak 표시
         self.informationLayout = QGridLayout()
