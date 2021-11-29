@@ -265,6 +265,7 @@ class Game(QWidget):
             self.OffOrDef = self.showImageGroupBox("", self.defenceImage, 90, 90)
         elif update["ad_status"] == 2:
             self.display.setText("승리!")
+            self.comShape = self.showImageGroupBox("", self.offenceImage, 90, 90)
             tiem.sleep(1)
             self.display.setText("가위바위보 중 하나를 선택하세요.")
         elif update["ad_status"] == 3:
@@ -307,6 +308,7 @@ class Game(QWidget):
         self.row1Layout.addWidget(self.OffOrDef, 0, 0)
         self.lastShapeLayout.addWidget(self.comLastShape, 0, 0)
         self.lastShapeLayout.addWidget(self.playerLastShape, 2, 0)
+        self.row2Layout.addWidget()
         self.display.repaint()
 
     # exit button clicked
