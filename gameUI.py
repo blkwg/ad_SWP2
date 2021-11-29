@@ -308,7 +308,6 @@ class Game(QWidget):
         self.row1Layout.addWidget(self.OffOrDef, 0, 0)
         self.lastShapeLayout.addWidget(self.comLastShape, 0, 0)
         self.lastShapeLayout.addWidget(self.playerLastShape, 2, 0)
-        self.row2Layout.addWidget()
         self.display.repaint()
 
     # exit button clicked
