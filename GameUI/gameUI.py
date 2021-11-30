@@ -327,7 +327,6 @@ class Game(QWidget):
             self.score = 0
             self.ad_status = None
             self.now = 0
-            self.lastShape = [self.initialImage, self.initialImage]
             self.OffOrDef.setIcon(QIcon(self.initialImage))
             self.comLastShape.setIcon(QIcon(self.initialImage))
             self.playerLastShape.setIcon(QIcon(self.initialImage))
