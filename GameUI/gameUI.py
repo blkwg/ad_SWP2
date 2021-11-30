@@ -218,8 +218,8 @@ class Game(QWidget):
         for content in groupboxList:
             self.groupbox = QInformationGroupBox(content, 130, 150)
 
-    # change image of imagePushButton
-    def changeImages(self, update):
+    # 현재 턴을 구현하거나 게임 종료처리
+    def currentTurn(self, update):
 
         if update["ad_status"] == 0:
             pixmapImage = self.changePixLabelImage(self.offenceImage, 70, 70)
@@ -230,6 +230,7 @@ class Game(QWidget):
         elif update["ad_status"] == 2:
             pixmapImage = self.changePixLabelImage(self.offenceImage, 70, 70)
             self.OffOrDefLabel.setPixmap(QPixmap(pixmapImage))
+            self.changeImages(update)
             self.display.setText("승리!!!")
 
             self.display.repaint()
@@ -246,12 +247,20 @@ class Game(QWidget):
             return
 
         elif update["ad_status"] == 3:
+            self.changeImages(update)
             self.display.setText("패배....")
             self.display.repaint()
             time.sleep(2)
             self.display.setText("게임을 다시 시작합니다.")
             self.newGame()
             return
+
+        self.changeImages(update)
+
+        self.display.repaint()
+
+    # image 바꾸는 함수
+    def changeImages(self, update):
 
         if update["hand_signal"] == 0:
             pixmapImage = self.changePixLabelImage(self.mukImage, 140, 140)
@@ -283,7 +292,6 @@ class Game(QWidget):
                 pixmapImage = self.changePixLabelImage(self.jjiImage, 280, 280)
                 self.comShapeLabel.setPixmap(QPixmap(pixmapImage))
 
-
         else:
             pixmapImage = self.changePixLabelImage(self.ppaImage, 140, 140)
             self.playerShapeLabel.setPixmap(QPixmap(pixmapImage))
@@ -298,8 +306,6 @@ class Game(QWidget):
             else:
                 pixmapImage = self.changePixLabelImage(self.ppaImage, 280, 280)
                 self.comShapeLabel.setPixmap(QPixmap(pixmapImage))
-
-        self.display.repaint()
 
     # exit button clicked
     def exitButtonClicked(self):
@@ -367,7 +373,7 @@ class Game(QWidget):
             gameLoop = mukjjippa()
             result = gameLoop.ingame(self.ad_status, shape, self.score, self.now, self.com_dataList)
             self.changeVals(result)
-            self.changeImages(result)
+            self.currentTurn(result)
             print(result)
             print(self.ad_status, shape, self.score, self.now, self.com_dataList)
         except Exception:
@@ -382,7 +388,7 @@ class Game(QWidget):
             gameLoop = mukjjippa()
             result = gameLoop.ingame(self.ad_status, shape, self.score, self.now, self.com_dataList)
             self.changeVals(result)
-            self.changeImages(result)
+            self.currentTurn(result)
             print(result)
         except Exception:
             err = traceback.format_exc()
@@ -396,7 +402,7 @@ class Game(QWidget):
             gameLoop = mukjjippa()
             result = gameLoop.ingame(self.ad_status, shape, self.score, self.now, self.com_dataList)
             self.changeVals(result)
-            self.changeImages(result)
+            self.currentTurn(result)
             print(result)
         except Exception:
             err = traceback.format_exc()
