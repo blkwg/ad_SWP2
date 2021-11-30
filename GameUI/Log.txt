@@ -1425,3 +1425,10 @@ AttributeError: 'Game' object has no attribute 'lastShape'
     self.lastShape[1] = self.mukImage
 AttributeError: 'Game' object has no attribute 'lastShape'
 
+[2021.12.01/00:39:37] - Traceback (most recent call last):
+  File "C:\Users\lsm12\ad_SWP2\GameUI\gameUI2.py", line 329, in mukButtonClicked
+    self.changeImages(result)
+  File "C:\Users\lsm12\ad_SWP2\GameUI\gameUI2.py", line 257, in changeImages
+    self.playerShape.setPixmap(QPixmap(self.mukImage))
+AttributeError: 'QGroupBox' object has no attribute 'setPixmap'
+

@@ -60,20 +60,6 @@ class QGroupBox(QGroupBox):
         self.setMaximumWidth(width)
         self.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Preferred)
 
-class QPixmapLabel(QLabel): # image 크기만 조정가능. PixmapLabel 크기는 class 밖에서 따로 조정.
-    def __init__(self, image, image_height, image_width):
-        super().__init__()
-        self.comLastShape = QLabel(self)
-
-        # image 크기설정
-        pixmap = QPixmap(image)
-        pixmap = pixmap.scaledToHeight(image_height)
-        pixmap = pixmap.scaledToWidth(image_width)
-
-        self.setPixmap(QPixmap(pixmap))
-
-        self.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Preferred)
-
 
 class Game(QWidget):
 
@@ -155,15 +141,15 @@ class Game(QWidget):
 
 
         # 플레이어가 현재 턴에 낸 모양
-        self.playerShapeLabel = QLabel("player's shape")
-        self.playerShape = self.imagePushButton(self.initialImage, 160, 160)
+        self.playerShapeLabel = self.pixmapLabel(self.initialImage, 140, 140)
+        self.playerShapeLabel.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Preferred)
+        self.playerShape = self.showImageGroupBox("player's shape", self.playerShapeLabel, 140, 140)
 
-        self.ShapeLayout = QGridLayout()
-        self.ShapeLayout.addWidget(self.playerShapeLabel, 0, 0)
-        self.ShapeLayout.addWidget(self.playerShape, 1, 0)
 
         # 컴퓨터의 현재 턴
-        self.comShape = self.imagePushButton(self.questionImage, 300, 300)
+        self.comShapeLabel = self.pixmapLabel(self.questionImage, 280, 280)
+        self.comShapeLabel.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Preferred)
+        self.comShape = self.showImageGroupBox("", self.comShapeLabel, 280, 280)
 
         # high score / score / game streak 표시
         self.informationLayout = QGridLayout()
@@ -174,7 +160,7 @@ class Game(QWidget):
             self.informationLayout.addWidget(self.groupbox, groupboxList.index(content), 0)
 
         # Layout
-        self.row2Layout.addLayout(self.ShapeLayout, 0, 0, 1, 1)
+        self.row2Layout.addWidget(self.playerShape, 0, 0, 1, 1)
         self.row2Layout.addWidget(self.comShape, 0, 1, 2, 1)
         self.row2Layout.addLayout(self.informationLayout, 0, 5, 2, 1)
 
@@ -251,38 +237,50 @@ class Game(QWidget):
             self.display.setText("다시 시작하려면 리셋 버튼을 누르세요.")
 
         if update["hand_signal"] == 0:
-            self.playerShape.setIcon(QIcon(self.mukImage))
+            pixmapImage = self.changePixLabelImage(self.mukImage, 140, 140)
+            self.playerShapeLabel.setPixmap(QPixmap(pixmapImage))
             if update["ad_status"] == 0:
-                self.comShape.setIcon(QIcon(self.jjiImage))
+                pixmapImage = self.changePixLabelImage(self.jjiImage, 280, 280)
+                self.comShapeLabel.setPixmap(QPixmap(pixmapImage))
                 self.display.setText("묵 묵...?")
             elif update["ad_status"] == 1:
-                self.comShape.setIcon(QIcon(self.ppaImage))
+                pixmapImage = self.changePixLabelImage(self.ppaImage, 280, 280)
+                self.comShapeLabel.setPixmap(QPixmap(pixmapImage))
                 self.display.setText("빠 빠...!")
             else:
-                self.comShape.setIcon(QIcon(self.mukImage))
+                pixmapImage = self.changePixLabelImage(self.mukImage, 280, 280)
+                self.comShapeLabel.setPixmap(QPixmap(pixmapImage))
 
         elif update["hand_signal"] == 1:
-            self.playerShape.setIcon(QIcon(self.jjiImage))
+            pixmapImage = self.changePixLabelImage(self.jjiImage, 140, 140)
+            self.playerShapeLabel.setPixmap(QPixmap(pixmapImage))
             if update["ad_status"] == 0:
-                self.comShape.setIcon(QIcon(self.ppaImage))
+                pixmapImage = self.changePixLabelImage(self.ppaImage, 280, 280)
+                self.comShapeLabel.setPixmap(QPixmap(pixmapImage))
                 self.display.setText("찌 찌...?")
             elif update["ad_status"] == 1:
-                self.comShape.setIcon(QIcon(self.mukImage))
+                pixmapImage = self.changePixLabelImage(self.mukImage, 280, 280)
+                self.comShapeLabel.setPixmap(QPixmap(pixmapImage))
                 self.display.setText("묵 묵...!")
             else:
-                self.comShape.setIcon(QIcon(self.jjiImage))
+                pixmapImage = self.changePixLabelImage(self.jjiImage, 280, 280)
+                self.comShapeLabel.setPixmap(QPixmap(pixmapImage))
 
 
         else:
-            self.playerShape.setIcon(QIcon(self.ppaImage))
+            pixmapImage = self.changePixLabelImage(self.ppaImage, 140, 140)
+            self.playerShapeLabel.setPixmap(QPixmap(pixmapImage))
             if update["ad_status"] == 0:
-                self.comShape.setIcon(QIcon(self.mukImage))
+                pixmapImage = self.changePixLabelImage(self.mukImage, 280, 280)
+                self.comShapeLabel.setPixmap(QPixmap(pixmapImage))
                 self.display.setText("빠 빠...?")
             elif update["ad_status"] == 1:
-                self.comShape.setIcon(QIcon(self.jjiImage))
+                pixmapImage = self.changePixLabelImage(self.jjiImage, 280, 280)
+                self.comShapeLabel.setPixmap(QPixmap(pixmapImage))
                 self.display.setText("찌 찌...!")
             else:
-                self.comShape.setIcon(QIcon(self.ppaImage))
+                pixmapImage = self.changePixLabelImage(self.ppaImage, 280, 280)
+                self.comShapeLabel.setPixmap(QPixmap(pixmapImage))
 
         self.display.repaint()
 
@@ -306,8 +304,10 @@ class Game(QWidget):
             self.ad_status = None
             self.now = 0
             self.OffOrDef.setIcon(QIcon(self.initialImage))
-            self.comShape.setIcon(QIcon(self.initialImage))
-            self.playerShape.setIcon(QIcon(self.initialImage))
+            pixmapImage = self.changePixLabelImage(self.questionImage, 280, 280)
+            self.comShapeLabel.setPixmap(QPixmap(pixmapImage))
+            pixmapImage = self.changePixLabelImage(self.initialImage, 140, 140)
+            self.playerShapeLabel.setPixmap(QPixmap(pixmapImage))
 
             self.display.repaint()
             self.display.setText("게임이 리셋되었습니다. 다시 시작중...")
@@ -358,6 +358,35 @@ class Game(QWidget):
             err = traceback.format_exc()
             ErrorLog(str(err))
             print(str(err))
+
+    # label을 pixmapLabel로
+    def pixmapLabel(self, image, height, width):
+        pixmapLabel = QLabel()
+
+        pixmap = QPixmap(image)
+        pixmap = pixmap.scaledToHeight(height)
+        pixmap = pixmap.scaledToWidth(width)
+
+        pixmapLabel.setPixmap(QPixmap(pixmap))
+
+        return pixmapLabel
+
+    def changePixLabelImage(self, image, height, width):
+        pixmap = QPixmap(image)
+        pixmap = pixmap.scaledToHeight(height)
+        pixmap = pixmap.scaledToWidth(width)
+
+        return pixmap
+
+    # image를 보여주는 groupbox
+    def showImageGroupBox(self, title, widget, height, width):
+        self.showGroupBox = QGroupBox(title, height + 20, width + 20)
+        self.vbox = QVBoxLayout()
+        self.vbox.addWidget(widget)
+        self.showGroupBox.setLayout(self.vbox)
+
+        return self.showGroupBox
+
 
 
 
