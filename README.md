@@ -1,2 +1,0 @@
-# AD Project
-## Team F
