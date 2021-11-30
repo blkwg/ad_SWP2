@@ -1,10 +1,8 @@
-from PyQt5.QtWidgets import QWidget, QLabel, QPushButton, QGridLayout, QApplication
-from PyQt5.QtGui import QPixmap
 import sys
 import random
 import traceback
 
-class mukjjippa(QWidget):
+class mukjjippa():
 
 
     def __init__(self):
@@ -35,7 +33,7 @@ class mukjjippa(QWidget):
                 now += 1
                 return 0
             elif com == 2:
-                com_dataList.append(com)
+                com_dataList.append(hand_signal)
                 now += 1
                 return 1
             elif com == 2:
@@ -47,7 +45,7 @@ class mukjjippa(QWidget):
                 now += 1
                 return 0
             elif com == 0:
-                com_dataList.append(com)
+                com_dataList.append(hand_signal)
                 now += 1
                 return 1
             elif com == 1:
@@ -59,7 +57,7 @@ class mukjjippa(QWidget):
                 now += 1
                 return 0
             elif com == 1:
-                com_dataList.append(com)
+                com_dataList.append(hand_signal)
                 now += 1
                 return 1
             elif com == 2:
@@ -73,7 +71,7 @@ class mukjjippa(QWidget):
                 now += 1
                 return 0
             elif com == 2:
-                com_dataList.append(com)
+                com_dataList.append(hand_signal)
                 now += 1
                 return 1
             elif com == 0:
@@ -84,7 +82,7 @@ class mukjjippa(QWidget):
                 now += 1
                 return 0
             elif com == 0:
-                com_dataList.append(com)
+                com_dataList.append(hand_signal)
                 now += 1
                 return 1
             elif com == 1:
@@ -95,7 +93,7 @@ class mukjjippa(QWidget):
                 now += 1
                 return 0
             elif com == 1:
-                com_dataList.append(com)
+                com_dataList.append(hand_signal)
                 now += 1
                 return 1
             elif com == 2:
