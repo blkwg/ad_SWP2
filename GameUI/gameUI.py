@@ -135,7 +135,6 @@ class Game(QWidget):
         # palette.setBrush(10, QBrush(wallpaper))
         # self.setPalette(palette)
 
-
         # row1
 
         # 공격/수비 표시
@@ -170,15 +169,14 @@ class Game(QWidget):
 
         # row 2
 
-        # 컴퓨터가 이전 턴에 낸 모양
-        self.comLastShape = self.imagePushButton(self.initialImage, 160, 160)
 
-        # 플레이어가 이전 턴에 낸 모양
-        self.playerLastShape = self.imagePushButton(self.initialImage, 160, 160)
+        # 플레이어가 현재 턴에 낸 모양
+        self.playerShapeLabel = QLabel("player's shape")
+        self.playerShape = self.imagePushButton(self.initialImage, 160, 160)
 
-        self.lastShapeLayout = QGridLayout()
-        self.lastShapeLayout.addWidget(self.comLastShape, 0, 0)
-        self.lastShapeLayout.addWidget(self.playerLastShape, 2, 0)
+        self.ShapeLayout = QGridLayout()
+        self.ShapeLayout.addWidget(self.playerShapeLabel, 0, 0)
+        self.ShapeLayout.addWidget(self.playerShape, 1, 0)
 
         # 컴퓨터의 현재 턴
         self.comShape = self.imagePushButton(self.questionImage, 300, 300)
@@ -192,7 +190,7 @@ class Game(QWidget):
             self.informationLayout.addWidget(self.groupbox, groupboxList.index(content), 0)
 
         # Layout
-        self.row2Layout.addLayout(self.lastShapeLayout, 0, 0, 3, 1)
+        self.row2Layout.addLayout(self.ShapeLayout, 0, 0, 1, 1)
         self.row2Layout.addWidget(self.comShape, 0, 1, 2, 1)
         self.row2Layout.addLayout(self.informationLayout, 0, 5, 2, 1)
 
@@ -251,6 +249,10 @@ class Game(QWidget):
 
     # change image of imagePushButton
     def changeImages(self, update):
+
+        self.comShape.setIcon(QIcon(self.questionImage))
+        time.sleep(1)
+
         if update["ad_status"] == 0:
             self.OffOrDef.setIcon(QIcon(self.offenceImage))
         elif update["ad_status"] == 1:
@@ -258,47 +260,51 @@ class Game(QWidget):
         elif update["ad_status"] == 2:
             self.OffOrDef.setIcon(QIcon(self.offenceImage))
             self.display.setText("승리!!!")
+            self.comShape.setIcon(QIcon(self.questionImage))
             self.display.repaint()
             time.sleep(2)
             self.display.setText("가위바위보 중 하나를 선택하세요.")
         elif update["ad_status"] == 3:
             self.display.setText("패배....")
+            self.comShape.setIcon(QIcon(self.questionImage))
             self.display.repaint()
             time.sleep(2)
             self.display.setText("다시 시작하려면 리셋 버튼을 누르세요.")
 
         if update["hand_signal"] == 0:
-            self.playerLastShape.setIcon(QIcon(self.mukImage))
+            self.playerShape.setIcon(QIcon(self.mukImage))
             if update["ad_status"] == 0:
-                self.comLastShape.setIcon(QIcon(self.jjiImage))
+                self.comShape.setIcon(QIcon(self.jjiImage))
                 self.display.setText("묵 묵...?")
             elif update["ad_status"] == 1:
-                self.comLastShape.setIcon(QIcon(self.ppaImage))
+                self.comShape.setIcon(QIcon(self.ppaImage))
                 self.display.setText("빠 빠...!")
             else:
-                self.comLastShape.setIcon(QIcon(self.mukImage))
+                self.comShape.setIcon(QIcon(self.mukImage))
+                self.lastShape[1] = self.mukImage
 
         elif update["hand_signal"] == 1:
-            self.playerLastShape.setIcon(QIcon(self.jjiImage))
+            self.playerShape.setIcon(QIcon(self.jjiImage))
             if update["ad_status"] == 0:
-                self.comLastShape.setIcon(QIcon(self.ppaImage))
+                self.comShape.setIcon(QIcon(self.ppaImage))
                 self.display.setText("찌 찌...?")
             elif update["ad_status"] == 1:
-                self.comLastShape.setIcon(QIcon(self.mukImage))
+                self.comShape.setIcon(QIcon(self.mukImage))
                 self.display.setText("묵 묵...!")
             else:
-                self.comLastShape.setIcon(QIcon(self.jjiImage))
+                self.comShape.setIcon(QIcon(self.jjiImage))
+
 
         else:
-            self.playerLastShape.setIcon(QIcon(self.ppaImage))
+            self.playerShape.setIcon(QIcon(self.ppaImage))
             if update["ad_status"] == 0:
-                self.comLastShape.setIcon(QIcon(self.mukImage))
+                self.comShape.setIcon(QIcon(self.mukImage))
                 self.display.setText("빠 빠...?")
             elif update["ad_status"] == 1:
-                self.comLastShape.setIcon(QIcon(self.jjiImage))
+                self.comShape.setIcon(QIcon(self.jjiImage))
                 self.display.setText("찌 찌...!")
             else:
-                self.comLastShape.setIcon(QIcon(self.ppaImage))
+                self.comShape.setIcon(QIcon(self.ppaImage))
 
         self.display.repaint()
 
@@ -321,6 +327,7 @@ class Game(QWidget):
             self.score = 0
             self.ad_status = None
             self.now = 0
+            self.lastShape = [self.initialImage, self.initialImage]
             self.OffOrDef.setIcon(QIcon(self.initialImage))
             self.comLastShape.setIcon(QIcon(self.initialImage))
             self.playerLastShape.setIcon(QIcon(self.initialImage))
