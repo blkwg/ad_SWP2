@@ -124,7 +124,7 @@ class Game(QWidget):
 
         # 새로운 게임
         self.reset = self.imagePushButton(self.newGameImage, 70, 70)
-        self.reset.clicked.connect(self.newGameButtonClicked)
+        self.reset.clicked.connect(self.resetButtonClicked)
 
         # 나가기 버튼
         self.exit = self.imagePushButton(self.exitImage, 70, 70)
@@ -231,14 +231,27 @@ class Game(QWidget):
             pixmapImage = self.changePixLabelImage(self.offenceImage, 70, 70)
             self.OffOrDefLabel.setPixmap(QPixmap(pixmapImage))
             self.display.setText("승리!!!")
+
             self.display.repaint()
             time.sleep(2)
+
+            pixmapImage = self.changePixLabelImage(self.initialImage, 140, 140)
+            self.playerShapeLabel.setPixmap(QPixmap(pixmapImage))
+            pixmapImage = self.changePixLabelImage(self.questionImage, 280, 280)
+            self.comShapeLabel.setPixmap(QPixmap(pixmapImage))
+            pixmapImage = self.changePixLabelImage(self.initialImage, 70, 70)
+            self.OffOrDefLabel.setPixmap(QPixmap(pixmapImage))
+
             self.display.setText("가위바위보 중 하나를 선택하세요.")
+            return
+
         elif update["ad_status"] == 3:
             self.display.setText("패배....")
             self.display.repaint()
             time.sleep(2)
-            self.display.setText("다시 시작하려면 리셋 버튼을 누르세요.")
+            self.display.setText("게임을 다시 시작합니다.")
+            self.newGame()
+            return
 
         if update["hand_signal"] == 0:
             pixmapImage = self.changePixLabelImage(self.mukImage, 140, 140)
@@ -297,7 +310,7 @@ class Game(QWidget):
             QCoreApplication.instance().quit()
 
     # reset button clicked
-    def newGameButtonClicked(self):
+    def resetButtonClicked(self):
         re = QMessageBox.question(self, "리셋 확인", "게임을 다시 시작하시겠습니까?",
                                   QMessageBox.Yes | QMessageBox.No)
 
@@ -322,6 +335,29 @@ class Game(QWidget):
             self.display.repaint()
             time.sleep(1)
             self.display.setText("게임을 시작합니다. 가위바위보 중 하나를 선택하세요.")
+
+    def newGame(self):
+
+        self.com_dataList = [0, 1, 2]
+        self.current_score = 0
+        self.score = 0
+        self.ad_status = None
+        self.now = 0
+
+        pixmapImage = self.changePixLabelImage(self.initialImage, 75, 75)
+        self.OffOrDefLabel.setPixmap(QPixmap(pixmapImage))
+
+        pixmapImage = self.changePixLabelImage(self.questionImage, 280, 280)
+        self.comShapeLabel.setPixmap(QPixmap(pixmapImage))
+
+        pixmapImage = self.changePixLabelImage(self.initialImage, 140, 140)
+        self.playerShapeLabel.setPixmap(QPixmap(pixmapImage))
+
+        self.display.repaint()
+        self.display.setText("새 게임 시작중...")
+        self.display.repaint()
+        time.sleep(1)
+        self.display.setText("게임을 새로 시작합니다. 가위바위보 중 하나를 선택하세요.")
 
 
     # muk button clicked
