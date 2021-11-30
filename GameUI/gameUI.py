@@ -1,8 +1,9 @@
-from PyQt5.QtCore import Qt, QSize
-from PyQt5.QtWidgets import QApplication, QWidget, QPushButton, QLabel, QGroupBox, QLineEdit
+from PyQt5.QtCore import Qt, QSize, QCoreApplication
+from PyQt5.QtWidgets import QApplication, QWidget, QPushButton, QLabel, QGroupBox, QLineEdit, QMessageBox
 from PyQt5.QtWidgets import QSizePolicy
 from PyQt5.QtWidgets import QGridLayout, QVBoxLayout, QHBoxLayout
 from PyQt5.QtGui import QPixmap, QIcon, QPalette, QImage, QBrush
+import time
 
 
 class QPushButton(QPushButton):
@@ -143,7 +144,7 @@ class Game(QWidget):
         self.display.setFont(font)
 
         # 새로운 게임
-        self.newGame = QPushButton("", newGameImage, 70, 70, self.newGameButtonClicked)
+        self.reset = QPushButton("", newGameImage, 70, 70, self.startGame)
 
         # 나가기 버튼
         self.exit = QPushButton("", exitImage, 70, 70, self.exitButtonClicked)
@@ -151,7 +152,7 @@ class Game(QWidget):
         # Layout
         self.row1Layout.addWidget(self.OffOrDef, 0, 0)
         self.row1Layout.addWidget(self.display, 0, 1)
-        self.row1Layout.addWidget(self.newGame, 0, 2)
+        self.row1Layout.addWidget(self.reset, 0, 2)
         self.row1Layout.addWidget(self.exit, 0, 3)
 
         self.mainLayout.addLayout(self.row1Layout, 0, 0)
@@ -210,6 +211,8 @@ class Game(QWidget):
         self.row3Layout.addWidget(self.shapeGroupBox)
         self.mainLayout.addLayout(self.row3Layout,2,0)
 
+        self.startGame()
+
 
     # image를 보여주는 groupbox
     def showImageGroupBox(self, title, image, height, width):
@@ -221,32 +224,32 @@ class Game(QWidget):
 
         return self.showGroupBox
 
+    def startGame(self):
+        self.gameOver = False
+        self.display.setText("게임을 시작합니다.    가위 바위...?")
 
     # buttonClicked funtions
 
     # exit button clicked
     def exitButtonClicked(self):
-        button = self.sender()
-        key = button.text()
-        self.display.setText(key)
+        re = QMessageBox.question(self, "종료 확인", "게임을 종료하시겠습니까?",
+                                  QMessageBox.Yes|QMessageBox.No)
 
-
-    # newGame button clicked
-    def newGameButtonClicked(self):
-        pass
+        if re == QMessageBox.Yes:
+            QCoreApplication.instance().quit()
 
     # 묵 button 클릭
     def mukButtonClicked(self):
-        pass
+        self.display.setText("묵")
 
 
     # 찌 button 클릭
     def jjiButtonClicked(self):
-        pass
+        self.display.setText("찌")
 
     # 빠 button 클릭
     def ppaButtonClicked(self):
-        pass
+        self.display.setText("빠")
 
 
 
