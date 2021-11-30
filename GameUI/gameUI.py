@@ -4,23 +4,24 @@ from PyQt5.QtWidgets import QSizePolicy
 from PyQt5.QtWidgets import QGridLayout, QVBoxLayout, QHBoxLayout
 from PyQt5.QtGui import QPixmap, QIcon, QPalette, QImage, QBrush
 import time
+import sys
+import game
+from mainView.main import ScoreDB
+import traceback
 
+def ErrorLog(error: str):
+    current_time = time.strftime("%Y.%m.%d/%H:%M:%S", time.localtime(time.time()))
+    with open("Log.txt", "a") as f:
+        f.write(f"[{current_time}] - {error}\n")
 
 class QPushButton(QPushButton):
-    def __init__(self, text, image, height, width, callback):
+    def __init__(self, height, width):
         super().__init__()
-        self.setText(text)
-
-        # QPushButton image setting
-        self.setIcon(QIcon(image))
-        self.setIconSize(QSize(height - 15, width - 15))
 
         # QPushButton size setting
         self.setMaximumHeight(height)
         self.setMaximumWidth(width)
         self.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Preferred)
-
-        self.clicked.connect(callback)
 
 class QLabelBox(QGroupBox): # Label들로만 이루어진 GroupBox
     def __init__(self, textList, height, width):
@@ -106,19 +107,26 @@ class Game(QWidget):
         self.row3Layout.setAlignment(Qt.AlignCenter)
         self.setLayout(self.mainLayout)
 
+        # game values
+        self.ad_status = None
+        self.score = 0
+        self.now = 0
+        self.com_dataList = [0, 1, 2]
+        self.current_score = 0
+
         # images
-        mukImage = "image/mjp/묵.png"
-        jjiImage = "image/mjp/찌.png"
-        ppaImage = "image/mjp/빠.png"
+        self.mukImage = "image/mjp/묵.png"
+        self.jjiImage = "image/mjp/찌.png"
+        self.ppaImage = "image/mjp/빠.png"
 
-        offenceImage = "image/OfforDef/공격.png"
-        defenceImage = "image/OfforDef/방어.png"
+        self.offenceImage = "image/OfforDef/공격.png"
+        self.defenceImage = "image/OfforDef/방어.png"
 
-        newGameImage = "image/재시작.png"
-        exitImage = "image/종료.png"
-        initialImage = "image/투명.png" # 처음 시작할 때 나오는 투명 배경
-        questionImage = "image/물음표.png"
-        # wallpaperImage = "image/wallpaper.jpg"
+        self.newGameImage = "image/재시작.png"
+        self.exitImage = "image/종료.png"
+        self.initialImage = "image/투명.png" # 처음 시작할 때 나오는 투명 배경
+        self.questionImage = "image/물음표.png"
+        # self.wallpaperImage = "image/wallpaper.jpg"
 
         # wallpaper setting
         # wallpaper = QImage("wallpaper.jpg")
@@ -131,7 +139,9 @@ class Game(QWidget):
         # row1
 
         # 공격/수비 표시
-        self.OffOrDef = self.showImageGroupBox("", initialImage, 90, 90)
+        self.OffOrDef = QPushButton(90, 90)
+        self.OffOrDef.setIcon(QIcon(self.initialImage))
+        self.OffOrDef.setIconSize(QSize(75, 75))
 
         # 현재 상태 표시
         self.display = QLineEdit(self)
@@ -144,10 +154,16 @@ class Game(QWidget):
         self.display.setFont(font)
 
         # 새로운 게임
-        self.reset = QPushButton("", newGameImage, 70, 70, self.startGame)
+        self.reset = QPushButton(70, 70)
+        self.reset.setIcon(QIcon(self.newGameImage))
+        self.reset.setIconSize(QSize(55, 55))
+        self.reset.clicked.connect(self.newGameButtonClicked)
 
         # 나가기 버튼
-        self.exit = QPushButton("", exitImage, 70, 70, self.exitButtonClicked)
+        self.exit = QPushButton(70, 70)
+        self.exit.setIcon(QIcon(self.exitImage))
+        self.exit.setIconSize(QSize(55, 55))
+        self.exit.clicked.connect(self.exitButtonClicked)
 
         # Layout
         self.row1Layout.addWidget(self.OffOrDef, 0, 0)
@@ -161,22 +177,28 @@ class Game(QWidget):
         # row 2
 
         # 컴퓨터가 이전 턴에 낸 모양
-        self.comLastShape = self.showImageGroupBox("computer", initialImage, 160, 160)
+        self.comLastShape = QPushButton(160, 160)
+        self.comLastShape.setIcon(QIcon(self.initialImage))
+        self.comLastShape.setIconSize(QSize(145, 145))
 
         # 플레이어가 이전 턴에 낸 모양
-        self.playerLastShape = self.showImageGroupBox("player", initialImage, 160, 160)
+        self.playerLastShape = QPushButton(160, 160)
+        self.playerLastShape.setIcon(QIcon(self.initialImage))
+        self.playerLastShape.setIconSize(QSize(145, 145))
 
         self.lastShapeLayout = QGridLayout()
         self.lastShapeLayout.addWidget(self.comLastShape, 0, 0)
         self.lastShapeLayout.addWidget(self.playerLastShape, 2, 0)
 
         # 컴퓨터의 현재 턴
-        self.comShape = self.showImageGroupBox("", questionImage, 300, 300)
+        self.comShape = QPushButton(300, 300)
+        self.comShape.setIcon(QIcon(self.questionImage))
+        self.comShape.setIconSize(QSize(285, 285))
 
         # high score / score / game streak 표시
         self.informationLayout = QGridLayout()
 
-        groupboxList = [["High Score", '0'], ["Score", '0'], ["Game Streak", '0']]
+        groupboxList = [["High Score", '%d' % self.score], ["Score", '%d' % self.current_score], ["Game Streak", '%d' % self.now]]
         for content in groupboxList:
             self.groupbox = QInformationGroupBox(content, 130, 150)
             self.informationLayout.addWidget(self.groupbox, groupboxList.index(content), 0)
@@ -192,9 +214,20 @@ class Game(QWidget):
         # row 3
 
         # 묵찌빠 선택 버튼
-        self.muk = QPushButton("", mukImage, 150, 150, self.mukButtonClicked)
-        self.jji = QPushButton("", jjiImage, 150, 150, self.jjiButtonClicked)
-        self.ppa = QPushButton("", ppaImage, 150, 150, self.ppaButtonClicked)
+        self.muk = QPushButton(150, 150)
+        self.muk.setIcon(QIcon(self.mukImage))
+        self.muk.setIconSize(QSize(135, 135))
+        self.muk.clicked.connect(self.mukButtonClicked)
+
+        self.jji = QPushButton(150, 150)
+        self.jji.setIcon(QIcon(self.jjiImage))
+        self.jji.setIconSize(QSize(135, 135))
+        self.jji.clicked.connect(self.jjiButtonClicked)
+
+        self.ppa = QPushButton(150, 150)
+        self.ppa.setIcon(QIcon(self.ppaImage))
+        self.ppa.setIconSize(QSize(135, 135))
+        self.ppa.clicked.connect(self.ppaButtonClicked)
 
         self.shapeGroupBox = QGroupBox("", 170, 550)
 
@@ -209,26 +242,74 @@ class Game(QWidget):
 
         # Layout
         self.row3Layout.addWidget(self.shapeGroupBox)
-        self.mainLayout.addLayout(self.row3Layout,2,0)
+        self.mainLayout.addLayout(self.row3Layout, 2, 0)
 
-        self.startGame()
+        self.display.setText("게임을 시작합니다. 가위바위보 중 하나를 선택하세요.")
 
 
-    # image를 보여주는 groupbox
-    def showImageGroupBox(self, title, image, height, width):
-        self.showGroupBox = QGroupBox(title, height, width)
-        self.vbox = QVBoxLayout()
-        self.pixmapLabel = QPixmapLabel(image, height - 20, width - 20)
-        self.vbox.addWidget(self.pixmapLabel)
-        self.showGroupBox.setLayout(self.vbox)
+     # buttonClicked funtions
+    def changeVals(self, update):
+        self.ad_status = update["ad_status"]
+        self.score = update["Hscore"]
+        self.now = update["now"]
+        self.com_dataList = update["com_dataList"]
+        self.current_score = update["current_score"]
 
-        return self.showGroupBox
+        groupboxList = [["High Score", '%d' % self.score], ["Score", '%d' % self.current_score],
+                        ["Game Streak", '%d' % self.now]]
+        for content in groupboxList:
+            self.groupbox = QInformationGroupBox(content, 130, 150)
 
-    def startGame(self):
-        self.gameOver = False
-        self.display.setText("게임을 시작합니다.    가위 바위...?")
+    # image change
+    def changeImages(self, update):
+        if update["ad_status"] == 0:
+            self.OffOrDef.setIcon(QIcon(self.offenceImage))
+        elif update["ad_status"] == 1:
+            self.OffOrDef.setIcon(QIcon(self.defenceImage))
+        elif update["ad_status"] == 2:
+            self.display.setText("승리!")
+            self.OffOrDef.setIcon(QIcon(self.offenceImage))
+            time.sleep(1)
+            self.display.setText("가위바위보 중 하나를 선택하세요.")
+        elif update["ad_status"] == 3:
+            self.display.setText("패배....")
+            time.sleep(1)
+            self.display.setText("다시 시작하려면 리셋 버튼을 누르세요.")
 
-    # buttonClicked funtions
+        if update["hand_signal"] == 0:
+            self.playerLastShape.setIcon(QIcon(self.mukImage))
+            if update["ad_status"] == 0:
+                self.comLastShape.setIcon(QIcon(self.jjiImage))
+                self.display.setText("묵묵...?")
+            elif update["ad_status"] == 1:
+                self.comLastShape.setIcon(QIcon(self.ppaImage))
+                self.display.setText("빠빠...!")
+            else:
+                self.comLastShape.setIcon(QIcon(self.mukImage))
+
+        elif update["hand_signal"] == 1:
+            self.playerLastShape.setIcon(QIcon(self.jjiImage))
+            if update["ad_status"] == 0:
+                self.comLastShape.setIcon(QIcon(self.ppaImage))
+                self.display.setText("찌찌...?")
+            elif update["ad_status"] == 1:
+                self.comLastShape.setIcon(QIcon(self.mukImage))
+                self.display.setText("묵묵...!")
+            else:
+                self.comLastShape.setIcon(QIcon(self.jjiImage))
+
+        else:
+            self.playerLastShape.setIcon(QIcon(self.ppaImage))
+            if update["ad_status"] == 0:
+                self.comLastShape.setIcon(QIcon(self.mukImage))
+                self.display.setText("빠빠...?")
+            elif update["ad_status"] == 1:
+                self.comLastShape.setIcon(QIcon(self.jjiImage))
+                self.display.setText("찌찌...!")
+            else:
+                self.comLastShape.setIcon(QIcon(self.ppaImage))
+
+        self.display.repaint()
 
     # exit button clicked
     def exitButtonClicked(self):
@@ -238,19 +319,69 @@ class Game(QWidget):
         if re == QMessageBox.Yes:
             QCoreApplication.instance().quit()
 
-    # 묵 button 클릭
+    # reset button clicked
+    def newGameButtonClicked(self):
+        re = QMessageBox.question(self, "리셋 확인", "게임을 다시 시작하시겠습니까?",
+                                  QMessageBox.Yes | QMessageBox.No)
+
+        if re == QMessageBox.Yes:
+            self.com_dataList = [0, 1, 2]
+            self.current_score = 0
+            self.score = 0
+            self.ad_status = None
+            self.now = 0
+            self.comLastShape.setIcon(QIcon(self.initialImage))
+            self.playerLastShape.setIcon(QIcon(self.initialImage))
+            self.comLastShape.setIcon(QIcon(self.initialImage))
+            self.playerLastShape.setIcon(QIcon(self.initialImage))
+            self.comShape.setIcon(QIcon(self.questionImage))
+
+            self.display.repaint()
+            self.display.setText("게임이 리셋되었습니다. 다시 시작중...")
+            self.display.repaint()
+            time.sleep(1)
+            self.display.setText("게임을 시작합니다. 가위바위보 중 하나를 선택하세요.")
+
+
+    # muk button clicked
     def mukButtonClicked(self):
-        self.display.setText("묵")
+        try:
+            shape = 0
+            gameLoop = game.mukjjippa()
+            result = gameLoop.ingame(self.ad_status, shape, self.score, self.now, self.com_dataList)
+            self.changeVals(result)
+            self.changeImages(result)
+            print(result)
+            print(self.ad_status, shape, self.score, self.now, self.com_dataList)
+        except Exception:
+            err = traceback.format_exc()
+            ErrorLog(str(err))
 
-
-    # 찌 button 클릭
+    # jji button clicked
     def jjiButtonClicked(self):
-        self.display.setText("찌")
+        try:
+            shape = 1
+            gameLoop = game.mukjjippa()
+            result = gameLoop.ingame(self.ad_status, shape, self.score, self.now, self.com_dataList)
+            self.changeVals(result)
+            self.changeImages(result)
+            print(result)
+        except Exception:
+            err = traceback.format_exc()
+            ErrorLog(str(err))
 
-    # 빠 button 클릭
+    # ppa button clicked
     def ppaButtonClicked(self):
-        self.display.setText("빠")
-
+        try:
+            shape = 2
+            gameLoop = game.mukjjippa()
+            result = gameLoop.ingame(self.ad_status, shape, self.score, self.now, self.com_dataList)
+            self.changeVals(result)
+            self.changeImages(result)
+            print(result)
+        except Exception:
+            err = traceback.format_exc()
+            ErrorLog(str(err))
 
 
 
