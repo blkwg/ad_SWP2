@@ -108,7 +108,9 @@ class Game(QWidget):
         # row1
 
         # 공격/수비 표시
-        self.OffOrDef = self.reset = self.imagePushButton(self.initialImage, 90, 90)
+        self.OffOrDefLabel = self.pixmapLabel(self.initialImage, 75, 75)
+        self.OffOrDefLabel.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Preferred)
+        self.OffOrDef = self.showImageGroupBox("", self.OffOrDefLabel, 70, 70)
 
         # 현재 상태 표시
         self.display = QLineEdit(self)
@@ -138,7 +140,6 @@ class Game(QWidget):
 
 
         # row 2
-
 
         # 플레이어가 현재 턴에 낸 모양
         self.playerShapeLabel = self.pixmapLabel(self.initialImage, 140, 140)
@@ -221,11 +222,14 @@ class Game(QWidget):
     def changeImages(self, update):
 
         if update["ad_status"] == 0:
-            self.OffOrDef.setIcon(QIcon(self.offenceImage))
+            pixmapImage = self.changePixLabelImage(self.offenceImage, 70, 70)
+            self.OffOrDefLabel.setPixmap(QPixmap(pixmapImage))
         elif update["ad_status"] == 1:
-            self.OffOrDef.setIcon(QIcon(self.defenceImage))
+            pixmapImage = self.changePixLabelImage(self.defenceImage, 75, 75)
+            self.OffOrDefLabel.setPixmap(QPixmap(pixmapImage))
         elif update["ad_status"] == 2:
-            self.OffOrDef.setIcon(QIcon(self.offenceImage))
+            pixmapImage = self.changePixLabelImage(self.offenceImage, 70, 70)
+            self.OffOrDefLabel.setPixmap(QPixmap(pixmapImage))
             self.display.setText("승리!!!")
             self.display.repaint()
             time.sleep(2)
@@ -303,9 +307,13 @@ class Game(QWidget):
             self.score = 0
             self.ad_status = None
             self.now = 0
-            self.OffOrDef.setIcon(QIcon(self.initialImage))
+
+            pixmapImage = self.changePixLabelImage(self.initialImage, 75, 75)
+            self.OffOrDefLabel.setPixmap(QPixmap(pixmapImage))
+
             pixmapImage = self.changePixLabelImage(self.questionImage, 280, 280)
             self.comShapeLabel.setPixmap(QPixmap(pixmapImage))
+
             pixmapImage = self.changePixLabelImage(self.initialImage, 140, 140)
             self.playerShapeLabel.setPixmap(QPixmap(pixmapImage))
 
