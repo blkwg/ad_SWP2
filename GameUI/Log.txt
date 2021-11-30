@@ -1264,3 +1264,73 @@ AttributeError: 'Game' object has no attribute 'mukjjippa'
     gameLoop = game.mukjjippa()
 AttributeError: 'Game' object has no attribute 'mukjjippa'
 
+[2021.11.30/16:58:48] - Traceback (most recent call last):
+  File "C:\Users\lsm12\ad_SWP2\GameUI\gameUI.py", line 338, in mukButtonClicked
+    gameLoop = game.mukjjippa()
+AttributeError: 'Game' object has no attribute 'mukjjippa'
+
+[2021.11.30/16:58:49] - Traceback (most recent call last):
+  File "C:\Users\lsm12\ad_SWP2\GameUI\gameUI.py", line 352, in jjiButtonClicked
+    gameLoop = game.mukjjippa()
+AttributeError: 'Game' object has no attribute 'mukjjippa'
+
+[2021.11.30/16:58:50] - Traceback (most recent call last):
+  File "C:\Users\lsm12\ad_SWP2\GameUI\gameUI.py", line 365, in ppaButtonClicked
+    gameLoop = game.mukjjippa()
+AttributeError: 'Game' object has no attribute 'mukjjippa'
+
+[2021.11.30/16:58:51] - Traceback (most recent call last):
+  File "C:\Users\lsm12\ad_SWP2\GameUI\gameUI.py", line 338, in mukButtonClicked
+    gameLoop = game.mukjjippa()
+AttributeError: 'Game' object has no attribute 'mukjjippa'
+
+[2021.11.30/16:58:51] - Traceback (most recent call last):
+  File "C:\Users\lsm12\ad_SWP2\GameUI\gameUI.py", line 352, in jjiButtonClicked
+    gameLoop = game.mukjjippa()
+AttributeError: 'Game' object has no attribute 'mukjjippa'
+
+[2021.11.30/16:58:52] - Traceback (most recent call last):
+  File "C:\Users\lsm12\ad_SWP2\GameUI\gameUI.py", line 365, in ppaButtonClicked
+    gameLoop = game.mukjjippa()
+AttributeError: 'Game' object has no attribute 'mukjjippa'
+
+[2021.11.30/16:58:53] - Traceback (most recent call last):
+  File "C:\Users\lsm12\ad_SWP2\GameUI\gameUI.py", line 338, in mukButtonClicked
+    gameLoop = game.mukjjippa()
+AttributeError: 'Game' object has no attribute 'mukjjippa'
+
+[2021.11.30/16:58:53] - Traceback (most recent call last):
+  File "C:\Users\lsm12\ad_SWP2\GameUI\gameUI.py", line 365, in ppaButtonClicked
+    gameLoop = game.mukjjippa()
+AttributeError: 'Game' object has no attribute 'mukjjippa'
+
+[2021.11.30/16:58:53] - Traceback (most recent call last):
+  File "C:\Users\lsm12\ad_SWP2\GameUI\gameUI.py", line 365, in ppaButtonClicked
+    gameLoop = game.mukjjippa()
+AttributeError: 'Game' object has no attribute 'mukjjippa'
+
+[2021.11.30/16:58:53] - Traceback (most recent call last):
+  File "C:\Users\lsm12\ad_SWP2\GameUI\gameUI.py", line 352, in jjiButtonClicked
+    gameLoop = game.mukjjippa()
+AttributeError: 'Game' object has no attribute 'mukjjippa'
+
+[2021.11.30/17:00:58] - Traceback (most recent call last):
+  File "C:\Users\lsm12\ad_SWP2\GameUI\gameUI.py", line 339, in mukButtonClicked
+    gameLoop = game.mukjjippa()
+AttributeError: 'Game' object has no attribute 'mukjjippa'
+
+[2021.11.30/17:03:37] - Traceback (most recent call last):
+  File "C:\Users\lsm12\ad_SWP2\GameUI\gameUI.py", line 340, in mukButtonClicked
+    result = gameLoop.ingame(self.ad_status, shape, self.score, self.now, self.com_dataList)
+TypeError: ingame() missing 1 required positional argument: 'com_dataList'
+
+[2021.11.30/17:04:36] - Traceback (most recent call last):
+  File "C:\Users\lsm12\ad_SWP2\GameUI\gameUI.py", line 355, in jjiButtonClicked
+    result = gameLoop.ingame(self.ad_status, shape, self.score, self.now, self.com_dataList)
+TypeError: ingame() missing 1 required positional argument: 'com_dataList'
+
+[2021.11.30/17:04:38] - Traceback (most recent call last):
+  File "C:\Users\lsm12\ad_SWP2\GameUI\gameUI.py", line 369, in ppaButtonClicked
+    result = gameLoop.ingame(self.ad_status, shape, self.score, self.now, self.com_dataList)
+TypeError: ingame() missing 1 required positional argument: 'com_dataList'
+
