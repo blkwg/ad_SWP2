@@ -1418,3 +1418,10 @@ AttributeError: 'Game' object has no attribute 'lastShape'
     self.lastShape[1] = self.mukImage
 AttributeError: 'Game' object has no attribute 'lastShape'
 
+[2021.12.01/00:08:31] - Traceback (most recent call last):
+  File "C:\Users\lsm12\ad_SWP2\GameUI\gameUI.py", line 346, in mukButtonClicked
+    self.changeImages(result)
+  File "C:\Users\lsm12\ad_SWP2\GameUI\gameUI.py", line 279, in changeImages
+    self.lastShape[1] = self.mukImage
+AttributeError: 'Game' object has no attribute 'lastShape'
+

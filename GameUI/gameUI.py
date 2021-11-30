@@ -23,22 +23,6 @@ class QPushButton(QPushButton):
         self.setMaximumWidth(width)
         self.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Preferred)
 
-class QLabelBox(QGroupBox): # Label들로만 이루어진 GroupBox
-    def __init__(self, textList, height, width):
-        super().__init__()
-
-        # GroupBox에 Label들 추가
-        self.vbox = QVBoxLayout()
-        for num in range(len(textList)):
-            self.show = QLabel(textList[num])
-            self.vbox.addWidget(self.show)
-
-        self.setLayout(self.vbox)
-
-        # LabelBox 크기설정
-        self.setMaximumHeight(height)
-        self.setMaximumWidth(width)
-        self.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Preferred)
 
 class QInformationGroupBox(QGroupBox): # information 표시하는 GroupBox는 아예 class로 만듦
     def __init__(self, textList, height, width):
@@ -250,9 +234,6 @@ class Game(QWidget):
     # change image of imagePushButton
     def changeImages(self, update):
 
-        self.comShape.setIcon(QIcon(self.questionImage))
-        time.sleep(1)
-
         if update["ad_status"] == 0:
             self.OffOrDef.setIcon(QIcon(self.offenceImage))
         elif update["ad_status"] == 1:
@@ -260,13 +241,11 @@ class Game(QWidget):
         elif update["ad_status"] == 2:
             self.OffOrDef.setIcon(QIcon(self.offenceImage))
             self.display.setText("승리!!!")
-            self.comShape.setIcon(QIcon(self.questionImage))
             self.display.repaint()
             time.sleep(2)
             self.display.setText("가위바위보 중 하나를 선택하세요.")
         elif update["ad_status"] == 3:
             self.display.setText("패배....")
-            self.comShape.setIcon(QIcon(self.questionImage))
             self.display.repaint()
             time.sleep(2)
             self.display.setText("다시 시작하려면 리셋 버튼을 누르세요.")
@@ -281,7 +260,6 @@ class Game(QWidget):
                 self.display.setText("빠 빠...!")
             else:
                 self.comShape.setIcon(QIcon(self.mukImage))
-                self.lastShape[1] = self.mukImage
 
         elif update["hand_signal"] == 1:
             self.playerShape.setIcon(QIcon(self.jjiImage))
@@ -311,7 +289,7 @@ class Game(QWidget):
     # exit button clicked
     def exitButtonClicked(self):
         re = QMessageBox.question(self, "종료 확인", "게임을 종료하시겠습니까?",
-                                  QMessageBox.Yes|QMessageBox.No)
+                                  QMessageBox.Yes | QMessageBox.No)
 
         if re == QMessageBox.Yes:
             QCoreApplication.instance().quit()
@@ -328,11 +306,8 @@ class Game(QWidget):
             self.ad_status = None
             self.now = 0
             self.OffOrDef.setIcon(QIcon(self.initialImage))
-            self.comLastShape.setIcon(QIcon(self.initialImage))
-            self.playerLastShape.setIcon(QIcon(self.initialImage))
-            self.comLastShape.setIcon(QIcon(self.initialImage))
-            self.playerLastShape.setIcon(QIcon(self.initialImage))
-            self.comShape.setIcon(QIcon(self.questionImage))
+            self.comShape.setIcon(QIcon(self.initialImage))
+            self.playerShape.setIcon(QIcon(self.initialImage))
 
             self.display.repaint()
             self.display.setText("게임이 리셋되었습니다. 다시 시작중...")
