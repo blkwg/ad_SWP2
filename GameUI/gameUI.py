@@ -4,9 +4,7 @@ from PyQt5.QtWidgets import QSizePolicy
 from PyQt5.QtWidgets import QGridLayout, QVBoxLayout, QHBoxLayout
 from PyQt5.QtGui import QPixmap, QIcon, QPalette, QImage, QBrush
 import time
-import sys
 from game import *
-from mainView.main import ScoreDB
 import traceback
 
 def ErrorLog(error: str):
@@ -25,27 +23,22 @@ class QPushButton(QPushButton):
 
 
 class QInformationGroupBox(QGroupBox): # information 표시하는 GroupBox는 아예 class로 만듦
-    def __init__(self, textList, height, width):
+    def __init__(self, title, label, height, width):
         super().__init__()
+        self.setTitle(title)
 
         # GroupBox에 Label들 추가
         self.vbox = QVBoxLayout()
-        for num in range(len(textList)):
-            self.show = QLabel(textList[num])
-            self.vbox.addWidget(self.show)
 
-            if num == 0:
-                font = self.show.font()
-                font.setPointSize(font.pointSize() + 2)
-                self.show.setFont(font)
-            else:
-                font = self.show.font()
-                font.setPointSize(font.pointSize() + 6)
-                self.show.setFont(font)
+        informationLabel = label
+        font = informationLabel.font()
+        font.setPointSize(font.pointSize() + 6)
+        informationLabel.setFont(font)
 
+        self.vbox.addWidget(informationLabel)
         self.setLayout(self.vbox)
 
-        # LabelBox 크기설정
+        # 크기설정
         self.setMaximumHeight(height)
         self.setMaximumWidth(width)
         self.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Preferred)
@@ -79,10 +72,11 @@ class Game(QWidget):
 
         # game values
         self.ad_status = None
-        self.score = 0
-        self.now = 0
         self.com_dataList = [0, 1, 2]
+        self.highScore = 0
         self.current_score = 0
+        self.gameStreak = 0
+        self.winningStreak = 0
 
         # images
         self.mukImage = "image/mjp/묵.png"
@@ -96,10 +90,10 @@ class Game(QWidget):
         self.exitImage = "image/종료.png"
         self.initialImage = "image/투명.png" # 처음 시작할 때 나오는 투명 배경
         self.questionImage = "image/물음표.png"
-        # self.wallpaperImage = "image/wallpaper.jpg"
+        self.wallpaperImage = "image/wallpaper.jpg"
 
         # wallpaper setting
-        # wallpaper = QImage("wallpaper.jpg")
+        # wallpaper = QImage(self.wallpaperImage)
         # wallpaper.scaled(QSize())
         # palette = QPalette()
         # palette.setBrush(10, QBrush(wallpaper))
@@ -144,21 +138,31 @@ class Game(QWidget):
         # 플레이어가 현재 턴에 낸 모양
         self.playerShapeLabel = self.pixmapLabel(self.initialImage, 140, 140)
         self.playerShapeLabel.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Preferred)
-        self.playerShape = self.showImageGroupBox("player's shape", self.playerShapeLabel, 140, 140)
-
+        self.playerShape = self.showImageGroupBox("Mine", self.playerShapeLabel, 140, 140)
 
         # 컴퓨터의 현재 턴
         self.comShapeLabel = self.pixmapLabel(self.questionImage, 280, 280)
         self.comShapeLabel.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Preferred)
-        self.comShape = self.showImageGroupBox("", self.comShapeLabel, 280, 280)
+        self.comShape = self.showImageGroupBox("Computer's", self.comShapeLabel, 280, 280)
 
         # high score / score / game streak 표시
         self.informationLayout = QGridLayout()
 
-        groupboxList = [["High Score", '%d' % self.score], ["Score", '%d' % self.current_score], ["Game Streak", '%d' % self.now]]
-        for content in groupboxList:
-            self.groupbox = QInformationGroupBox(content, 130, 150)
-            self.informationLayout.addWidget(self.groupbox, groupboxList.index(content), 0)
+        self.showHighScore = QLabel(str(self.highScore))
+        self.highScoreGroupBox = QInformationGroupBox("High Score", self.showHighScore, 100, 150)
+        self.informationLayout.addWidget(self.highScoreGroupBox, 0, 0)
+
+        self.showScore = QLabel(str(self.current_score))
+        self.scoreGroupBox = QInformationGroupBox("Score", self.showScore, 100, 150)
+        self.informationLayout.addWidget(self.scoreGroupBox, 1, 0)
+
+        self.showGameStreak = QLabel(str(self.gameStreak))
+        self.gameStreakGroupBox = QInformationGroupBox("Game Streak", self.showGameStreak, 100, 150)
+        self.informationLayout.addWidget(self.gameStreakGroupBox, 2, 0)
+
+        self.showWinningStreak = QLabel(str(self.winningStreak))
+        self.winningStreakGroupBox = QInformationGroupBox("Winning Streak", self.showWinningStreak, 100, 150)
+        self.informationLayout.addWidget(self.winningStreakGroupBox, 3, 0)
 
         # Layout
         self.row2Layout.addWidget(self.playerShape, 0, 0, 1, 1)
@@ -197,6 +201,7 @@ class Game(QWidget):
 
         self.display.setText("게임을 시작합니다. 가위바위보 중 하나를 선택하세요.")
 
+
     # image를 출력하는 QPushButton
     def imagePushButton(self, image, height, width):
         button = QPushButton(height, width)
@@ -205,20 +210,25 @@ class Game(QWidget):
 
         return button
 
+
+# -----------------------------------------------------------------------------------------
+# 한 턴 실행하기
+# -----------------------------------------------------------------------------------------
     # change value
     def changeVals(self, update):
         self.ad_status = update["ad_status"]
-        self.score = update["Hscore"]
-        self.now = update["now"]
         self.com_dataList = update["com_dataList"]
+        self.gameStreak += 1
         self.current_score = update["current_score"]
 
-        groupboxList = [["High Score", '%d' % self.score], ["Score", '%d' % self.current_score],
-                        ["Game Streak", '%d' % self.now]]
-        for content in groupboxList:
-            self.groupbox = QInformationGroupBox(content, 130, 150)
+        if self.current_score > self.highScore:
+            self.highScore = self.current_score
 
-    # 현재 턴을 구현하거나 게임 종료처리
+        self.showHighScore.setText(str(self.highScore))
+        self.showScore.setText(str(self.current_score))
+        self.showGameStreak.setText(str(self.gameStreak))
+
+    # 현재 턴을 실행하거나 게임 종료처리
     def currentTurn(self, update):
 
         if update["ad_status"] == 0:
@@ -232,6 +242,8 @@ class Game(QWidget):
             self.OffOrDefLabel.setPixmap(QPixmap(pixmapImage))
             self.changeImages(update)
             self.display.setText("승리!!!")
+            self.winningStreak += 1
+            self.showWinningStreak.setText(str(self.winningStreak))
 
             self.display.repaint()
             time.sleep(2)
@@ -259,7 +271,7 @@ class Game(QWidget):
 
         self.display.repaint()
 
-    # image 바꾸는 함수
+    # 공/방 image와 player's & computer's shape 바꾸기
     def changeImages(self, update):
 
         if update["hand_signal"] == 0:
@@ -307,6 +319,11 @@ class Game(QWidget):
                 pixmapImage = self.changePixLabelImage(self.ppaImage, 280, 280)
                 self.comShapeLabel.setPixmap(QPixmap(pixmapImage))
 
+
+# -----------------------------------------------------------------------------------------
+# buttonClicked Methods
+# -----------------------------------------------------------------------------------------
+
     # exit button clicked
     def exitButtonClicked(self):
         re = QMessageBox.question(self, "종료 확인", "게임을 종료하시겠습니까?",
@@ -321,20 +338,7 @@ class Game(QWidget):
                                   QMessageBox.Yes | QMessageBox.No)
 
         if re == QMessageBox.Yes:
-            self.com_dataList = [0, 1, 2]
-            self.current_score = 0
-            self.score = 0
-            self.ad_status = None
-            self.now = 0
-
-            pixmapImage = self.changePixLabelImage(self.initialImage, 75, 75)
-            self.OffOrDefLabel.setPixmap(QPixmap(pixmapImage))
-
-            pixmapImage = self.changePixLabelImage(self.questionImage, 280, 280)
-            self.comShapeLabel.setPixmap(QPixmap(pixmapImage))
-
-            pixmapImage = self.changePixLabelImage(self.initialImage, 140, 140)
-            self.playerShapeLabel.setPixmap(QPixmap(pixmapImage))
+            self.newGameSet()
 
             self.display.repaint()
             self.display.setText("게임이 리셋되었습니다. 다시 시작중...")
@@ -342,13 +346,23 @@ class Game(QWidget):
             time.sleep(1)
             self.display.setText("게임을 시작합니다. 가위바위보 중 하나를 선택하세요.")
 
+    # 패배해서 새로운 게임 시작할 때때
     def newGame(self):
+        self.newGameSet()
 
+        self.display.repaint()
+        self.display.setText("새 게임 시작중...")
+        self.display.repaint()
+        time.sleep(1)
+        self.display.setText("게임을 새로 시작합니다. 가위바위보 중 하나를 선택하세요.")
+
+    # 게임 reset할 때 변수 initialize
+    def newGameSet(self):
         self.com_dataList = [0, 1, 2]
-        self.current_score = 0
-        self.score = 0
         self.ad_status = None
-        self.now = 0
+        self.current_score = 0
+        self.gameStreak = 0
+        self.winningStreak = 0
 
         pixmapImage = self.changePixLabelImage(self.initialImage, 75, 75)
         self.OffOrDefLabel.setPixmap(QPixmap(pixmapImage))
@@ -359,23 +373,20 @@ class Game(QWidget):
         pixmapImage = self.changePixLabelImage(self.initialImage, 140, 140)
         self.playerShapeLabel.setPixmap(QPixmap(pixmapImage))
 
-        self.display.repaint()
-        self.display.setText("새 게임 시작중...")
-        self.display.repaint()
-        time.sleep(1)
-        self.display.setText("게임을 새로 시작합니다. 가위바위보 중 하나를 선택하세요.")
-
+        self.showScore.setText(str(self.current_score))
+        self.showGameStreak.setText(str(self.gameStreak))
+        self.showWinningStreak.setText(str(self.winningStreak))
 
     # muk button clicked
     def mukButtonClicked(self):
         try:
             shape = 0
             gameLoop = mukjjippa()
-            result = gameLoop.ingame(self.ad_status, shape, self.score, self.now, self.com_dataList)
+            result = gameLoop.ingame(self.ad_status, shape, self.current_score, self.gameStreak, self.com_dataList)
             self.changeVals(result)
             self.currentTurn(result)
             print(result)
-            print(self.ad_status, shape, self.score, self.now, self.com_dataList)
+            print(self.ad_status, shape, self.com_dataList)
         except Exception:
             err = traceback.format_exc()
             ErrorLog(str(err))
@@ -386,7 +397,7 @@ class Game(QWidget):
         try:
             shape = 1
             gameLoop = mukjjippa()
-            result = gameLoop.ingame(self.ad_status, shape, self.score, self.now, self.com_dataList)
+            result = gameLoop.ingame(self.ad_status, shape, self.current_score, self.gameStreak, self.com_dataList)
             self.changeVals(result)
             self.currentTurn(result)
             print(result)
@@ -400,7 +411,7 @@ class Game(QWidget):
         try:
             shape = 2
             gameLoop = mukjjippa()
-            result = gameLoop.ingame(self.ad_status, shape, self.score, self.now, self.com_dataList)
+            result = gameLoop.ingame(self.ad_status, shape, self.current_score, self.gameStreak, self.com_dataList)
             self.changeVals(result)
             self.currentTurn(result)
             print(result)
@@ -409,7 +420,19 @@ class Game(QWidget):
             ErrorLog(str(err))
             print(str(err))
 
-    # label을 pixmapLabel로
+
+# -----------------------------------------------------------------------------------------
+# 특정 목적 widget 제작 methods
+# -----------------------------------------------------------------------------------------
+    # image를 출력하는 QPushButton
+    def imagePushButton(self, image, height, width):
+        button = QPushButton(height, width)
+        button.setIcon(QIcon(image))
+        button.setIconSize(QSize(height - 15, width - 15))
+
+        return button
+
+    # label -> pixmapLabel
     def pixmapLabel(self, image, height, width):
         pixmapLabel = QLabel()
 

@@ -1432,3 +1432,160 @@ AttributeError: 'Game' object has no attribute 'lastShape'
     self.playerShape.setPixmap(QPixmap(self.mukImage))
 AttributeError: 'QGroupBox' object has no attribute 'setPixmap'
 
+[2021.12.01/02:25:50] - Traceback (most recent call last):
+  File "C:\Users\lsm12\ad_SWP2\GameUI\gameUI.py", line 390, in jjiButtonClicked
+    result = gameLoop.ingame(self.ad_status, shape, self.score, self.now, self.com_dataList)
+  File "C:\Users\lsm12\ad_SWP2\GameUI\game.py", line 114, in ingame
+    current_score = score + 2**now
+TypeError: unsupported operand type(s) for +: 'QInformationGroupBox' and 'int'
+
+[2021.12.01/02:25:51] - Traceback (most recent call last):
+  File "C:\Users\lsm12\ad_SWP2\GameUI\gameUI.py", line 404, in ppaButtonClicked
+    result = gameLoop.ingame(self.ad_status, shape, self.score, self.now, self.com_dataList)
+  File "C:\Users\lsm12\ad_SWP2\GameUI\game.py", line 114, in ingame
+    current_score = score + 2**now
+TypeError: unsupported operand type(s) for +: 'QInformationGroupBox' and 'int'
+
+[2021.12.01/02:25:52] - Traceback (most recent call last):
+  File "C:\Users\lsm12\ad_SWP2\GameUI\gameUI.py", line 375, in mukButtonClicked
+    result = gameLoop.ingame(self.ad_status, shape, self.score, self.now, self.com_dataList)
+  File "C:\Users\lsm12\ad_SWP2\GameUI\game.py", line 114, in ingame
+    current_score = score + 2**now
+TypeError: unsupported operand type(s) for +: 'QInformationGroupBox' and 'int'
+
+[2021.12.01/02:25:53] - Traceback (most recent call last):
+  File "C:\Users\lsm12\ad_SWP2\GameUI\gameUI.py", line 390, in jjiButtonClicked
+    result = gameLoop.ingame(self.ad_status, shape, self.score, self.now, self.com_dataList)
+  File "C:\Users\lsm12\ad_SWP2\GameUI\game.py", line 114, in ingame
+    current_score = score + 2**now
+TypeError: unsupported operand type(s) for +: 'QInformationGroupBox' and 'int'
+
+[2021.12.01/02:25:53] - Traceback (most recent call last):
+  File "C:\Users\lsm12\ad_SWP2\GameUI\gameUI.py", line 404, in ppaButtonClicked
+    result = gameLoop.ingame(self.ad_status, shape, self.score, self.now, self.com_dataList)
+  File "C:\Users\lsm12\ad_SWP2\GameUI\game.py", line 114, in ingame
+    current_score = score + 2**now
+TypeError: unsupported operand type(s) for +: 'QInformationGroupBox' and 'int'
+
+[2021.12.01/02:25:54] - Traceback (most recent call last):
+  File "C:\Users\lsm12\ad_SWP2\GameUI\gameUI.py", line 390, in jjiButtonClicked
+    result = gameLoop.ingame(self.ad_status, shape, self.score, self.now, self.com_dataList)
+  File "C:\Users\lsm12\ad_SWP2\GameUI\game.py", line 114, in ingame
+    current_score = score + 2**now
+TypeError: unsupported operand type(s) for +: 'QInformationGroupBox' and 'int'
+
+[2021.12.01/02:25:57] - Traceback (most recent call last):
+  File "C:\Users\lsm12\ad_SWP2\GameUI\gameUI.py", line 375, in mukButtonClicked
+    result = gameLoop.ingame(self.ad_status, shape, self.score, self.now, self.com_dataList)
+  File "C:\Users\lsm12\ad_SWP2\GameUI\game.py", line 114, in ingame
+    current_score = score + 2**now
+TypeError: unsupported operand type(s) for +: 'QInformationGroupBox' and 'int'
+
+[2021.12.01/02:26:00] - Traceback (most recent call last):
+  File "C:\Users\lsm12\ad_SWP2\GameUI\gameUI.py", line 404, in ppaButtonClicked
+    result = gameLoop.ingame(self.ad_status, shape, self.score, self.now, self.com_dataList)
+  File "C:\Users\lsm12\ad_SWP2\GameUI\game.py", line 114, in ingame
+    current_score = score + 2**now
+TypeError: unsupported operand type(s) for +: 'QInformationGroupBox' and 'int'
+
+[2021.12.01/02:26:33] - Traceback (most recent call last):
+  File "C:\Users\lsm12\ad_SWP2\GameUI\gameUI.py", line 390, in jjiButtonClicked
+    result = gameLoop.ingame(self.ad_status, shape, self.score, self.now, self.com_dataList)
+  File "C:\Users\lsm12\ad_SWP2\GameUI\game.py", line 114, in ingame
+    current_score = score + 2**now
+TypeError: unsupported operand type(s) for +: 'QInformationGroupBox' and 'int'
+
+[2021.12.01/02:26:37] - Traceback (most recent call last):
+  File "C:\Users\lsm12\ad_SWP2\GameUI\gameUI.py", line 404, in ppaButtonClicked
+    result = gameLoop.ingame(self.ad_status, shape, self.score, self.now, self.com_dataList)
+  File "C:\Users\lsm12\ad_SWP2\GameUI\game.py", line 114, in ingame
+    current_score = score + 2**now
+TypeError: unsupported operand type(s) for +: 'QInformationGroupBox' and 'int'
+
+[2021.12.01/02:26:39] - Traceback (most recent call last):
+  File "C:\Users\lsm12\ad_SWP2\GameUI\gameUI.py", line 375, in mukButtonClicked
+    result = gameLoop.ingame(self.ad_status, shape, self.score, self.now, self.com_dataList)
+  File "C:\Users\lsm12\ad_SWP2\GameUI\game.py", line 114, in ingame
+    current_score = score + 2**now
+TypeError: unsupported operand type(s) for +: 'QInformationGroupBox' and 'int'
+
+[2021.12.01/02:32:24] - Traceback (most recent call last):
+  File "C:\Users\lsm12\ad_SWP2\GameUI\gameUI.py", line 395, in jjiButtonClicked
+    result = gameLoop.ingame(self.ad_status, shape, self.score, self.now, self.com_dataList)
+  File "C:\Users\lsm12\ad_SWP2\GameUI\game.py", line 114, in ingame
+    current_score = score + 2**now
+TypeError: can only concatenate str (not "int") to str
+
+[2021.12.01/02:32:33] - Traceback (most recent call last):
+  File "C:\Users\lsm12\ad_SWP2\GameUI\gameUI.py", line 409, in ppaButtonClicked
+    result = gameLoop.ingame(self.ad_status, shape, self.score, self.now, self.com_dataList)
+  File "C:\Users\lsm12\ad_SWP2\GameUI\game.py", line 114, in ingame
+    current_score = score + 2**now
+TypeError: can only concatenate str (not "int") to str
+
+[2021.12.01/02:33:25] - Traceback (most recent call last):
+  File "C:\Users\lsm12\ad_SWP2\GameUI\gameUI.py", line 395, in jjiButtonClicked
+    result = gameLoop.ingame(self.ad_status, shape, self.score, self.now, self.com_dataList)
+  File "C:\Users\lsm12\ad_SWP2\GameUI\game.py", line 114, in ingame
+    current_score = score + 2**now
+TypeError: can only concatenate str (not "int") to str
+
+[2021.12.01/02:33:31] - Traceback (most recent call last):
+  File "C:\Users\lsm12\ad_SWP2\GameUI\gameUI.py", line 409, in ppaButtonClicked
+    result = gameLoop.ingame(self.ad_status, shape, self.score, self.now, self.com_dataList)
+  File "C:\Users\lsm12\ad_SWP2\GameUI\game.py", line 114, in ingame
+    current_score = score + 2**now
+TypeError: can only concatenate str (not "int") to str
+
+[2021.12.01/02:33:45] - Traceback (most recent call last):
+  File "C:\Users\lsm12\ad_SWP2\GameUI\gameUI.py", line 395, in jjiButtonClicked
+    result = gameLoop.ingame(self.ad_status, shape, self.score, self.now, self.com_dataList)
+  File "C:\Users\lsm12\ad_SWP2\GameUI\game.py", line 114, in ingame
+    current_score = score + 2**now
+TypeError: can only concatenate str (not "int") to str
+
+[2021.12.01/02:33:47] - Traceback (most recent call last):
+  File "C:\Users\lsm12\ad_SWP2\GameUI\gameUI.py", line 380, in mukButtonClicked
+    result = gameLoop.ingame(self.ad_status, shape, self.score, self.now, self.com_dataList)
+  File "C:\Users\lsm12\ad_SWP2\GameUI\game.py", line 114, in ingame
+    current_score = score + 2**now
+TypeError: can only concatenate str (not "int") to str
+
+[2021.12.01/02:38:18] - Traceback (most recent call last):
+  File "C:\Users\lsm12\ad_SWP2\GameUI\gameUI.py", line 395, in jjiButtonClicked
+    result = gameLoop.ingame(self.ad_status, shape, self.score, self.now, self.com_dataList)
+  File "C:\Users\lsm12\ad_SWP2\GameUI\game.py", line 114, in ingame
+    current_score = score + 2**now
+TypeError: can only concatenate str (not "int") to str
+
+[2021.12.01/02:38:20] - Traceback (most recent call last):
+  File "C:\Users\lsm12\ad_SWP2\GameUI\gameUI.py", line 380, in mukButtonClicked
+    result = gameLoop.ingame(self.ad_status, shape, self.score, self.now, self.com_dataList)
+  File "C:\Users\lsm12\ad_SWP2\GameUI\game.py", line 114, in ingame
+    current_score = score + 2**now
+TypeError: can only concatenate str (not "int") to str
+
+[2021.12.01/02:40:54] - Traceback (most recent call last):
+  File "C:\Users\lsm12\ad_SWP2\GameUI\gameUI.py", line 410, in ppaButtonClicked
+    result = gameLoop.ingame(self.ad_status, shape, self.score, self.now, self.com_dataList)
+  File "C:\Users\lsm12\ad_SWP2\GameUI\game.py", line 114, in ingame
+    current_score = score + 2**now
+TypeError: can only concatenate str (not "int") to str
+
+[2021.12.01/02:41:18] - Traceback (most recent call last):
+  File "C:\Users\lsm12\ad_SWP2\GameUI\gameUI.py", line 395, in jjiButtonClicked
+    result = gameLoop.ingame(self.ad_status, shape, self.score, self.now, self.com_dataList)
+  File "C:\Users\lsm12\ad_SWP2\GameUI\game.py", line 114, in ingame
+    current_score = score + 2**now
+TypeError: can only concatenate str (not "int") to str
+
+[2021.12.01/23:47:31] - Traceback (most recent call last):
+  File "C:\Users\lsm12\ad_SWP2\GameUI\gameUI.py", line 386, in jjiButtonClicked
+    result = gameLoop.ingame(self.ad_status, shape, self.score, self.now, self.com_dataList)
+TypeError: ingame() takes 4 positional arguments but 6 were given
+
+[2021.12.01/23:47:40] - Traceback (most recent call last):
+  File "C:\Users\lsm12\ad_SWP2\GameUI\gameUI.py", line 400, in ppaButtonClicked
+    result = gameLoop.ingame(self.ad_status, shape, self.score, self.now, self.com_dataList)
+TypeError: ingame() takes 4 positional arguments but 6 were given
+
