@@ -2,18 +2,21 @@ import pickle
 import sys
 from PyQt5.QtWidgets import (QWidget, QPushButton,
     QHBoxLayout, QVBoxLayout, QApplication, QLabel,
-    QComboBox, QTextEdit, QLineEdit)
+    QTextEdit, QLineEdit)
 from PyQt5.QtCore import Qt
 
-class ScoreDB(QWidget):
+from gameUI import Game
 
-    def __init__(self):
+class MainView(QWidget):
+    global A
+    def __init__(self, game):
         super().__init__()
         self.initUI()
         self.dbfilename = 'userDB.csv'
         self.scoredb = []
         self.readScoreDB()
         self.showScoreDB()
+        self.game = game
 
     def initUI(self):
         NameLabel = QLabel('Name', self)
@@ -73,8 +76,8 @@ class ScoreDB(QWidget):
         self.show()
 
     def gameClicked(self):
-        # 게엠뷰 연결
-        return
+        self.close()
+        A.show()
 
     def addClicked(self):
         try:
@@ -248,5 +251,9 @@ class ScoreDB(QWidget):
 
 if __name__ == '__main__':
     app = QApplication(sys.argv)
-    ex = ScoreDB()
+
+    game = Game()
+    ex = MainView(game)
+    A = Game()
+
     sys.exit(app.exec_())
