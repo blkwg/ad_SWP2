@@ -150,8 +150,7 @@ class MainView(QWidget):
                     else:
                         msg += str(idx) + '위' + '       \t'
                         for attr in sorted(p):
-                            if attr != 'Age':
-                                msg += str(p[attr]) + '       \t'
+                            msg += str(p[attr]) + '       \t'
             else :
                 msg = '닉네임이 존재하지 않습니다. '
 
@@ -241,8 +240,7 @@ class MainView(QWidget):
         for p in sorted(self.scoredb, key = lambda person:person['Score'], reverse = True):
             msg += str(idx) + '위' + '       \t'
             for attr in sorted(p):
-                if attr != 'Age':
-                    msg += str(p[attr]) + '       \t'
+                msg += str(p[attr]) + '       \t'
             msg += '\n'
             idx += 1
         self.resultEdit.setText(msg)
