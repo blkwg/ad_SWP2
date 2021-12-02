@@ -22,10 +22,16 @@ class MainView(QWidget):
         NameLabel = QLabel('Name', self)
         self.NameEdit = QLineEdit(self)
 
+        ScoreLabel = QLabel('Score', self)
+        self.ScoreEdit = QLineEdit(self)
+
         inputHbox = QHBoxLayout()
         inputHbox.addStretch(1)
         inputHbox.addWidget(NameLabel)
         inputHbox.addWidget(self.NameEdit)
+
+        inputHbox.addWidget(ScoreLabel)
+        inputHbox.addWidget(self.ScoreEdit)
 
         gameButton = QPushButton('Game Start')
         gameButton.clicked.connect(self.gameClicked)
@@ -39,6 +45,9 @@ class MainView(QWidget):
         findButton = QPushButton('Find')
         findButton.clicked.connect(self.findClicked)
 
+        updateButton = QPushButton('Update')
+        updateButton.clicked.connect(self.updateClicked)
+
         showButton = QPushButton('Show')
         showButton.clicked.connect(self.showClicked)
 
@@ -48,6 +57,7 @@ class MainView(QWidget):
         commandHbox.addWidget(addButton)
         commandHbox.addWidget(delButton)
         commandHbox.addWidget(findButton)
+        commandHbox.addWidget(updateButton)
         commandHbox.addWidget(showButton)
 
         resultLabel = QLabel('Ranking : ', self)
@@ -66,41 +76,8 @@ class MainView(QWidget):
         self.show()
 
     def gameClicked(self):
-        try:
-            sender = self.sender()
-            name = self.NameEdit.text()
-            if name == '':
-                raise ValueError
-
-            msg = ''
-            check = self.nameCheck(name)
-
-            if check == True:
-                self.close()
-                A.show(name)
-
-            else :
-                msg = '없는 닉네임입니다. 추가해주세요. '
-                self.resultEdit.setText(msg)
-
-        except ValueError:
-            msg = '입력값을 정확하게 입력해주세요 '
-            self.resultEdit.setText(msg)
-            pass
-
-        except:
-            pass
-
-    def updateScore(self, name):
-        try:
-            if self.gameUI.score > self.gameUI.current_score:
-                for p in self.scoredb:
-                    if p['Name'] == name:
-                        p['Score'] = self.gameUI.score
-
-        except:
-            pass
-
+        self.close()
+        A.show()
 
     def addClicked(self):
         try:
@@ -184,6 +161,33 @@ class MainView(QWidget):
             msg = '입력값을 정확하게 입력해주세요 '
             self.resultEdit.setText(msg)
             pass
+
+        except:
+            pass
+
+    def updateClicked(self):  # 게임 종료 후 유저가 점수 없데이트
+        try:
+            sender = self.sender()
+            name = self.NameEdit.text()
+            score = int(self.ScoreEdit.text())
+            if name == '' or score == '':
+                raise ValueError
+
+            msg = ''
+            check = self.nameCheck(name)
+
+            if check == True:
+                for p in self.scoredb:
+                    if p['Name'] == name:
+                        p['Score'] += score
+                        self.showScoreDB()
+            else:
+                msg = '닉네임이 존재하지 않습니다. '
+                self.resultEdit.setText(msg)
+
+        except ValueError:
+            msg = '입력값을 정확하게 입력해주세요 '
+            self.resultEdit.setText(msg)
 
         except:
             pass
